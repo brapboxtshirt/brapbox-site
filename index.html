@@ -1214,7 +1214,7 @@ label[for="qsDate"],#qsDate{display:none}
             <div class="qs-h"><h3>Pick your gear</h3><p>Pick your garments, the style, the color and how many.</p></div>
                         <div class="qs-thumbs qs-dprev qs-gprev" id="qsGPrev" aria-live="polite"></div>
                         <div class="qs-group"><span class="qs-lab">Color <span class="qs-v" id="qsColorName"></span></span><div class="qs-swatches" id="qsSwatches" role="radiogroup" aria-label="Color"></div></div>
-                        <div class="qs-group"><span class="qs-lab">Product <span class="qs-v">Pick one or more · 48 minimum combined</span></span><div class="qs-prods" id="qsProds" role="group" aria-label="Products"></div><p class="qs-grand" id="qsGrand" aria-live="polite"></p></div>
+                        <div class="qs-group"><span class="qs-lab">Product <span class="qs-v">Pick one or more · 12 minimum (DTF), 48+ screen print</span></span><div class="qs-prods" id="qsProds" role="group" aria-label="Products"></div><p class="qs-grand" id="qsGrand" aria-live="polite"></p></div>
             <div class="qs-group"><span class="qs-lab">Style <span class="qs-v" id="qsMinNote"></span></span><div class="qs-styles" id="qsStyles" role="radiogroup" aria-label="Style"></div></div>
             <div class="qs-group" hidden><span class="qs-lab">How many? <span class="qs-v" id="qsQtyMin"></span></span><div class="qs-qty"><button type="button" data-q="-1" aria-label="12 fewer">−</button><input type="number" id="qsQty" inputmode="numeric" min="0" max="5000" aria-label="Quantity"><button type="button" data-q="1" aria-label="12 more">+</button><span>pieces</span></div><div class="qs-warn" id="qsQtyWarn" hidden></div></div>
           </div>
@@ -1426,7 +1426,7 @@ label[for="qsDate"],#qsDate{display:none}
     fitSub();addEventListener("resize",fitSub);document.fonts&&document.fonts.ready.then(fitSub);})();
   // ---------- FAQ ----------
   const FAQ=[
-   ["What's your minimum order?","48 pieces per design for screen printing, and you can mix tees, long sleeves and hoodies to get there. For 24 pieces or less, we can do a DTF print if it's more cost effective on your end."],
+   ["What's your minimum order?","Our minimum is 12 pieces. For 12 to 24 pieces, we do a DTF print, which is more cost effective on small runs. Screen printing starts at 48 pieces per design, and you can mix tees, long sleeves and hoodies to get there."],
    ["How do I get a price?","Build your order in the <a href=\"#studio\">quote studio</a> and send it. Antonio checks every quote himself and comes back with a firm price."],
    ["How long does an order take?","Typically 10–14 days after you approve your proof.<br><b>Need a rush?</b> Give us a call at <a href=\"tel:+17142749388\" style=\"white-space:nowrap\">714-274-9388</a>."],
    ["Can you rush it?","Call us at <a href=\"tel:+17142749388\">714-274-9388</a> and we'll tell you what the press can do."],
@@ -1534,13 +1534,13 @@ label[for="qsDate"],#qsDate{display:none}
     tote:'<path d="M5 9h14l-1 12H6z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/>'
   };
   const P={
-    tee:{name:"T-shirts",one:"tee",m:"screen",min:24,kind:"tee",sized:1,cols:C_APP,styles:[["g5000","Gildan 5000","Heavy cotton workhorse",10.5],["nl3600","Next Level 3600","Soft, fitted cotton tee",13.5],["cc1717","Comfort Colors 1717","Garment-dyed heavyweight",15.5]]},
-    ls:{name:"Long sleeves",one:"long sleeve",m:"screen",min:24,kind:"ls",sized:1,cols:C_APP,styles:[["g2400","Gildan 2400","Classic long sleeve",15.5],["cc6014","Comfort Colors 6014","Garment-dyed long sleeve",19],["nl3601","Next Level 3601","Soft, fitted cotton long sleeve",16.5]]},
-    hood:{name:"Hoodies",one:"hoodie",m:"screen",min:24,kind:"hood",sized:1,cols:C_APP,styles:[["ss4500","Independent SS4500","Midweight, the go-to",29],["g18500","Gildan 18500","Heavy blend, budget pick",24],["ind4000","Independent IND4000","Heavyweight pullover hoodie",36.5]]},
-    crew:{name:"Crewnecks",one:"crewneck",m:"screen",min:24,kind:"crew",sized:1,cols:C_APP,styles:[["ss3000","Independent SS3000","Midweight crew",24],["g18000","Gildan 18000","Heavy blend crew",19]]},
+    tee:{name:"T-shirts",one:"tee",m:"screen",min:12,kind:"tee",sized:1,cols:C_APP,styles:[["g5000","Gildan 5000","Heavy cotton workhorse",10.5],["nl3600","Next Level 3600","Soft, fitted cotton tee",13.5],["cc1717","Comfort Colors 1717","Garment-dyed heavyweight",15.5]]},
+    ls:{name:"Long sleeves",one:"long sleeve",m:"screen",min:12,kind:"ls",sized:1,cols:C_APP,styles:[["g2400","Gildan 2400","Classic long sleeve",15.5],["cc6014","Comfort Colors 6014","Garment-dyed long sleeve",19],["nl3601","Next Level 3601","Soft, fitted cotton long sleeve",16.5]]},
+    hood:{name:"Hoodies",one:"hoodie",m:"screen",min:12,kind:"hood",sized:1,cols:C_APP,styles:[["ss4500","Independent SS4500","Midweight, the go-to",29],["g18500","Gildan 18500","Heavy blend, budget pick",24],["ind4000","Independent IND4000","Heavyweight pullover hoodie",36.5]]},
+    crew:{name:"Crewnecks",one:"crewneck",m:"screen",min:12,kind:"crew",sized:1,cols:C_APP,styles:[["ss3000","Independent SS3000","Midweight crew",24],["g18000","Gildan 18000","Heavy blend crew",19]]},
     polo:{name:"Polos",one:"polo",m:"emb",min:24,kind:"polo",sized:1,cols:C_APP,styles:[["par500","Paragon 500 Sebring","Moisture-wicking performance polo",22],["g8800","Gildan 8800","DryBlend 50/50 jersey polo",16]]},
     hat:{name:"Hats",one:"hat",m:"emb",min:24,kind:"hat",sized:0,cols:C_HAT,styles:[["yp6006","Yupoong 6006","5-panel flat bill trucker snapback",18.5],["ff180ap","Flexfit 180AP Delta","Seamless perforated snapback, curved bill",24.5],["ot39165","Foam Trucker Snapback","Foam front, mesh back, braid",9.5]]},
-    tote:{name:"Totes",one:"tote",m:"screen",min:24,kind:"tote",sized:0,cols:C_TOTE,styles:[["q500","Q-Tees Q500","Canvas tote",6.5],["q800","Q-Tees Q800","Heavy canvas tote",6.5]]}
+    tote:{name:"Totes",one:"tote",m:"screen",min:12,kind:"tote",sized:0,cols:C_TOTE,styles:[["q500","Q-Tees Q500","Canvas tote",6.5],["q800","Q-Tees Q800","Heavy canvas tote",6.5]]}
   };
   ["crew","polo","hat","tote"].forEach(k=>delete P[k]);
   Object.values(P).forEach(p=>p.styles.sort((a,b)=>a[3]-b[3]));
@@ -1566,7 +1566,7 @@ label[for="qsDate"],#qsDate{display:none}
   const SLBL={front:"front",back:"back",lsleeve:"left sleeve",rsleeve:"right sleeve"};
   const SLV_GEO={tee:[820,260,-.606,.27,180],polo:[820,260,-.606,.27,180],ls:[820,265,-.204,.42,60],crew:[820,265,-.204,.42,60],hood:[822,305,-.245,.42,60]};
   const PHOTO={tee:"1244",ls:"0785",hood:"1207",crew:"1213",polo:"0973",hat:"1125",tote:"1123"};
-  const TS=[{min:24,m:1,dtf:1},{min:48,m:1},{min:72,m:.9},{min:144,m:.8},{min:288,m:.73}],TE=[{min:24,m:1.1},{min:48,m:1},{min:144,m:.92},{min:288,m:.86}];
+  const TS=[{min:12,m:1,dtf:1},{min:48,m:1},{min:72,m:.9},{min:144,m:.8},{min:288,m:.73}],TE=[{min:24,m:1.1},{min:48,m:1},{min:144,m:.92},{min:288,m:.86}];
 
   const side=(on,pre)=>({on,src:"sample",raw:null,up:null,file:"",knock:true,hasA:false,t1:"",t2:"",tc:"#F8991D",txt:null,pre,cx:null,top:null,w:null,inks:1,cols:null,full:false,det:0});
   const Q={step:0,prod:"tee",style:"g5000",color:"#17171A",cname:"Black",view:"front",S:{front:side(true,"center"),back:side(false,"full"),lsleeve:side(false,"sleeve"),rsleeve:side(false,"sleeve")},sz:{},when:"",date:"",ship:"pickup"};
@@ -1790,7 +1790,7 @@ label[for="qsDate"],#qsDate{display:none}
 
   // ---------- pricing ----------
   const tiers=()=>prod().m==="emb"?TE:TS;
-  function quote(qo){const pr=prod(),st=sty(),qty=qo??total(),q=qty,T=tiers(),gq=Math.max(24,grand()),tier=[...T].reverse().find(t=>gq>=t.min);
+  function quote(qo){const pr=prod(),st=sty(),qty=qo??total(),q=qty,T=tiers(),gq=Math.max(12,grand()),tier=[...T].reverse().find(t=>gq>=t.min);
     const act=SIDES.filter(k=>Q.S[k].on&&(!isSlv(k)||hasSlv()));let deco=0;
     act.forEach((k,i)=>{const s=Q.S[k];if(pr.m==="emb")deco+=i?6:0;else if(s.full)deco+=4.5+(i?0:-1.25);else deco+=(i?3:0)+(Math.max(1,s.inks)-1)*1.25;});
     const per=tier.dtf?st[3]+9.5+act.slice(1).reduce((a,k)=>a+(k==="back"?6:4),0):(st[3]+deco)*tier.m;let ups=0;if(pr.sized)for(const k in UPS)ups+=(Q.sz[k]||0)*UPS[k];if(qo!=null&&qty)ups*=q/Math.max(1,total());
@@ -1826,20 +1826,20 @@ label[for="qsDate"],#qsDate{display:none}
   function buildSwitch(){const ks=selKeys(),row=$("qsSwitch");row.hidden=ks.length<2||Q.step<1||Q.step>2;if(row.hidden)return;
     const el=$("qsSwitchBtns");el.innerHTML="";ks.forEach(k=>{const b=document.createElement("button");b.type="button";b.textContent=P[k].name;b.setAttribute("aria-pressed",k===Q.prod);
       b.addEventListener("click",()=>{if(k===Q.prod)return;focusProd(k);buildGear();if(Q.step===2)syncDesign();refresh();});el.appendChild(b);});}
-  function qtyUI(){const pr=prod(),t=total();$("qsQtyMin").textContent=pr.m==="emb"?`${pr.min} minimum`:"24 minimum · under 48 is DTF";const w=$("qsQtyWarn");w.hidden=t>=pr.min;w.textContent=`The minimum for ${pr.name.toLowerCase()} is ${pr.min} pieces.`;}
+  function qtyUI(){const pr=prod(),t=total();$("qsQtyMin").textContent=pr.m==="emb"?`${pr.min} minimum`:"12 minimum · under 48 is DTF";const w=$("qsQtyWarn");w.hidden=t>=pr.min;w.textContent=`The minimum for ${pr.name.toLowerCase()} is ${pr.min} pieces.`;}
   function buildGear(){
     const pe=$("qsProds");pe.innerHTML="";Object.entries(P).forEach(([k,p])=>{const b=document.createElement("button");b.type="button";b.className="qs-prod"+(k===Q.prod&&selKeys().length>1?" cur":"");b.setAttribute("role","checkbox");b.setAttribute("aria-checked",k in Q.sel);
       b.innerHTML=`<em>${p.m==="emb"?"Stitched":"Printed"}</em><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg><b>${p.name}</b>`;
       b.addEventListener("click",()=>{if(!(k in Q.sel))focusProd(k);else if(selKeys().length>1){delete Q.sel[k];if(k===Q.prod){const nk=selKeys()[selKeys().length-1];setProd(nk,true);loadSel(nk);SAMP={};}}buildGear();refresh();});
       const wr=document.createElement("div");wr.className="qs-pw";wr.appendChild(b);
-      if(k in Q.sel){const q=k===Q.prod?total():(Q.sel[k].sz["One size"]||0),lb=document.createElement("label");lb.className="qs-pq"+(grand()<24?" low":"");
+      if(k in Q.sel){const q=k===Q.prod?total():(Q.sel[k].sz["One size"]||0),lb=document.createElement("label");lb.className="qs-pq"+(grand()<12?" low":"");
         lb.innerHTML=`<span>Quantity needed</span><input type="number" inputmode="numeric" min="0" max="5000" value="${q||""}" placeholder="0" aria-label="${p.name} quantity needed">`;
         const inp=lb.querySelector("input");inp.addEventListener("input",()=>{const v=Math.max(0,Math.min(5000,Math.round(+inp.value)||0));if(k===Q.prod){split(v);saveCur();}else Q.sel[k].sz={"One size":v};refresh();});
         wr.appendChild(lb);}
       pe.appendChild(wr);});
     const se=$("qsStyles");se.innerHTML="";prod().styles.forEach(s=>{const b=document.createElement("button");b.type="button";b.className="qs-style";b.setAttribute("role","radio");b.setAttribute("aria-checked",s[0]===Q.style);
       b.innerHTML=`<span><b>${tierName(s)}</b><small>${s[2]}</small></span>`;b.addEventListener("click",()=>{Q.style=s[0];saveCur();buildGear();refresh();});se.appendChild(b);});
-    $("qsMinNote").textContent=prod().m==="emb"?`Embroidered · ${prod().min} piece minimum`:"Screen print from 48 combined · DTF from 24";
+    $("qsMinNote").textContent=prod().m==="emb"?`Embroidered · ${prod().min} piece minimum`:"Screen print from 48 combined · DTF from 12";
     const sw=$("qsSwatches");sw.innerHTML="";prod().cols.forEach(([n,c])=>{const b=document.createElement("button");b.type="button";b.className="qs-sw";b.style.background=c;b.title=n;b.setAttribute("role","radio");b.setAttribute("aria-label",n);b.setAttribute("aria-checked",c===Q.color);
       b.addEventListener("click",()=>{Q.color=c;Q.cname=n;SAMP={};saveCur();buildGear();refresh();});sw.appendChild(b);});
     $("qsColorName").textContent=Q.cname;$("qsQty").value=total();qtyUI();}
@@ -1976,13 +1976,13 @@ label[for="qsDate"],#qsDate{display:none}
 
   // ---------- refresh + steps ----------
   function stageBits(){const s=Q.S[Q.view];const add=$("qsAddSide");add.hidden=s.on;add.textContent=`+ Add a ${SLBL[Q.view]} ${prod().m==="emb"?"logo":"print"}`;$("qsHint").hidden=!(Q.step===2&&s.on&&!UI.hintDone);}
-  function refresh(){syncLocs();dprev();spots();gprev();{const g=grand(),el=$("qsGrand");el.className="qs-grand"+(g<24?" low":"");const z=selKeys().filter(k=>!(k===Q.prod?total():(Q.sel[k].sz["One size"]||0))).map(k=>P[k].name.toLowerCase());el.innerHTML=z.length?`Total <b>${g} pcs</b> · add a quantity for ${z.join(" and ")}`:g<24?`Total <b>${g} pcs</b> · add ${24-g} more to reach the 24 minimum`:g<48?`Total <b>${g} pcs</b> · DTF print (screen printing starts at 48)`:`Total <b>${g} pcs</b> · screen print`;document.querySelectorAll(".qs-pq").forEach(l=>l.classList.toggle("low",g<24));}inkBox();buildSwitch();const r=quote(),all=withEach(()=>({tot:quote().tot,qty:total()})),T=all.reduce((a,x)=>a+x.tot,0);
+  function refresh(){syncLocs();dprev();spots();gprev();{const g=grand(),el=$("qsGrand");el.className="qs-grand"+(g<12?" low":"");const z=selKeys().filter(k=>!(k===Q.prod?total():(Q.sel[k].sz["One size"]||0))).map(k=>P[k].name.toLowerCase());el.innerHTML=z.length?`Total <b>${g} pcs</b> · add a quantity for ${z.join(" and ")}`:g<12?`Total <b>${g} pcs</b> · add ${12-g} more to reach the 12 minimum`:g<48?`Total <b>${g} pcs</b> · DTF print (screen printing starts at 48)`:`Total <b>${g} pcs</b> · screen print`;document.querySelectorAll(".qs-pq").forEach(l=>l.classList.toggle("low",g<12));}inkBox();buildSwitch();const r=quote(),all=withEach(()=>({tot:quote().tot,qty:total()})),T=all.reduce((a,x)=>a+x.tot,0);
     countTo($("qsTot"),pp(r),money);countTo($("qsMTot"),T,money);countTo($("qsEstV"),T,money);$("qsPer").textContent=r.qty+" pcs";
     $("qsRange").textContent=pnote(r);$("qsQtyS").textContent=r.qty<prod().min?"min "+prod().min:(isRush()?"rush · contact us":"");
     $("qsMeta").textContent=`${tierName(r.st)} · ${Q.cname}`;const due=$("qsDue");due.hidden=!Q.when;due.textContent=dueD()?`Need by ${fmt(dueD())}${isRush()?" · rush":""}`:Q.when==="rush"?"Rush order":"No hard deadline";due.classList.toggle("hot",isRush());$("qsMDue").textContent=all.length>1?`Estimate · ${all.reduce((a,x)=>a+x.qty,0)} pcs`:`Estimate · ${money(pp(r))} each`;
     if(Q.step===3)summary(r);
     navState(r);stageBits();render();}
-  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=(Q.step===1&&(grand()<24||withEach(()=>total()<1).some(Boolean)))||(Q.step===0&&!Q.when);nx.disabled=bad;mn.disabled=bad;
+  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=(Q.step===1&&(grand()<12||withEach(()=>total()<1).some(Boolean)))||(Q.step===0&&!Q.when);nx.disabled=bad;mn.disabled=bad;
     const nextLbl=Q.step>=2?"Finalize &amp; Send":`Next: ${NAMES[Q.step+1]}`;nx.innerHTML=`${nextLbl} <span class="ar">→</span>`;mn.textContent=(Q.step>=2?"Finalize & Send":nextLbl)+" →";$("qsEst").hidden=Q.step===1;document.querySelector(".qs-pricebox").hidden=Q.step===1;$("qsMTot").parentElement.style.visibility=Q.step===1?"hidden":"";}
   const stepEls=[...document.querySelectorAll(".qs-step")];
   function go(i,scroll){Q.step=Math.max(0,Math.min(3,i));$("qsDone").hidden=true;$("qsNav").hidden=false;
