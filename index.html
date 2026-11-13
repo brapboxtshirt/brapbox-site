@@ -1214,7 +1214,7 @@ label[for="qsDate"],#qsDate{display:none}
             <div class="qs-h"><h3>Pick your gear</h3><p>Pick your garments, the style, the color and how many.</p></div>
                         <div class="qs-thumbs qs-dprev qs-gprev" id="qsGPrev" aria-live="polite"></div>
                         <div class="qs-group"><span class="qs-lab">Color <span class="qs-v" id="qsColorName"></span></span><div class="qs-swatches" id="qsSwatches" role="radiogroup" aria-label="Color"></div></div>
-                        <div class="qs-group"><span class="qs-lab">Product <span class="qs-v">Pick one or more · 12 minimum (DTF), 48+ screen print</span></span><div class="qs-prods" id="qsProds" role="group" aria-label="Products"></div><p class="qs-grand" id="qsGrand" aria-live="polite"></p></div>
+                        <div class="qs-group"><span class="qs-lab">Product <span class="qs-v">Pick one or more · 12–24 DTF, 25+ screen print</span></span><div class="qs-prods" id="qsProds" role="group" aria-label="Products"></div><p class="qs-grand" id="qsGrand" aria-live="polite"></p></div>
             <div class="qs-group"><span class="qs-lab">Style <span class="qs-v" id="qsMinNote"></span></span><div class="qs-styles" id="qsStyles" role="radiogroup" aria-label="Style"></div></div>
             <div class="qs-group" hidden><span class="qs-lab">How many? <span class="qs-v" id="qsQtyMin"></span></span><div class="qs-qty"><button type="button" data-q="-1" aria-label="12 fewer">−</button><input type="number" id="qsQty" inputmode="numeric" min="0" max="5000" aria-label="Quantity"><button type="button" data-q="1" aria-label="12 more">+</button><span>pieces</span></div><div class="qs-warn" id="qsQtyWarn" hidden></div></div>
           </div>
@@ -1426,7 +1426,7 @@ label[for="qsDate"],#qsDate{display:none}
     fitSub();addEventListener("resize",fitSub);document.fonts&&document.fonts.ready.then(fitSub);})();
   // ---------- FAQ ----------
   const FAQ=[
-   ["What's your minimum order?","Our minimum is 12 pieces. For 12 to 24 pieces, we do a DTF print, which is more cost effective on small runs. Screen printing starts at 48 pieces per design, and you can mix tees, long sleeves and hoodies to get there."],
+   ["What's your minimum order?","Our minimum is 12 pieces. For 12 to 24 pieces, we do a DTF print, which is more cost effective on small runs. From 25 pieces up, we screen print, and you can mix tees, long sleeves and hoodies to get there. We confirm the final print method after we review your design, since some designs print better one way than the other."],
    ["How do I get a price?","Build your order in the <a href=\"#studio\">quote studio</a> and send it. Antonio checks every quote himself and comes back with a firm price."],
    ["How long does an order take?","Typically 10–14 days after you approve your proof.<br><b>Need a rush?</b> Give us a call at <a href=\"tel:+17142749388\" style=\"white-space:nowrap\">714-274-9388</a>."],
    ["Can you rush it?","Call us at <a href=\"tel:+17142749388\">714-274-9388</a> and we'll tell you what the press can do."],
@@ -1566,11 +1566,11 @@ label[for="qsDate"],#qsDate{display:none}
   const SLBL={front:"front",back:"back",lsleeve:"left sleeve",rsleeve:"right sleeve"};
   const SLV_GEO={tee:[820,260,-.606,.27,180],polo:[820,260,-.606,.27,180],ls:[820,265,-.204,.42,60],crew:[820,265,-.204,.42,60],hood:[822,305,-.245,.42,60]};
   const PHOTO={tee:"1244",ls:"0785",hood:"1207",crew:"1213",polo:"0973",hat:"1125",tote:"1123"};
-  const TS=[{min:12,m:1,dtf:1},{min:48,m:1},{min:72,m:.9},{min:144,m:.8},{min:288,m:.73}],TE=[{min:24,m:1.1},{min:48,m:1},{min:144,m:.92},{min:288,m:.86}];
+  const TS=[{min:12,m:1,dtf:1},{min:25,m:1},{min:72,m:.9},{min:144,m:.8},{min:288,m:.73}],TE=[{min:24,m:1.1},{min:48,m:1},{min:144,m:.92},{min:288,m:.86}];
 
   const side=(on,pre)=>({on,src:"sample",raw:null,up:null,file:"",knock:true,hasA:false,t1:"",t2:"",tc:"#F8991D",txt:null,pre,cx:null,top:null,w:null,inks:1,cols:null,full:false,det:0});
   const Q={step:0,prod:"tee",style:"g5000",color:"#17171A",cname:"Black",view:"front",S:{front:side(true,"center"),back:side(false,"full"),lsleeve:side(false,"sleeve"),rsleeve:side(false,"sleeve")},sz:{},when:"",date:"",ship:"pickup"};
-  const isDtf=q=>P[Q.prod].m==="screen"&&(q??grand())<48,prod=()=>P[Q.prod],sty=()=>prod().styles.find(s=>s[0]===Q.style)||prod().styles[0];
+  const isDtf=q=>P[Q.prod].m==="screen"&&(q??grand())<25,prod=()=>P[Q.prod],sty=()=>prod().styles.find(s=>s[0]===Q.style)||prod().styles[0];
   const keys=()=>["One size"];
   const total=()=>keys().reduce((a,k)=>a+(Q.sz[k]||0),0);
   function split(n){Q.sz={"One size":n};}
@@ -1826,7 +1826,7 @@ label[for="qsDate"],#qsDate{display:none}
   function buildSwitch(){const ks=selKeys(),row=$("qsSwitch");row.hidden=ks.length<2||Q.step<1||Q.step>2;if(row.hidden)return;
     const el=$("qsSwitchBtns");el.innerHTML="";ks.forEach(k=>{const b=document.createElement("button");b.type="button";b.textContent=P[k].name;b.setAttribute("aria-pressed",k===Q.prod);
       b.addEventListener("click",()=>{if(k===Q.prod)return;focusProd(k);buildGear();if(Q.step===2)syncDesign();refresh();});el.appendChild(b);});}
-  function qtyUI(){const pr=prod(),t=total();$("qsQtyMin").textContent=pr.m==="emb"?`${pr.min} minimum`:"12 minimum · under 48 is DTF";const w=$("qsQtyWarn");w.hidden=t>=pr.min;w.textContent=`The minimum for ${pr.name.toLowerCase()} is ${pr.min} pieces.`;}
+  function qtyUI(){const pr=prod(),t=total();$("qsQtyMin").textContent=pr.m==="emb"?`${pr.min} minimum`:"12 minimum · 12–24 is DTF";const w=$("qsQtyWarn");w.hidden=t>=pr.min;w.textContent=`The minimum for ${pr.name.toLowerCase()} is ${pr.min} pieces.`;}
   function buildGear(){
     const pe=$("qsProds");pe.innerHTML="";Object.entries(P).forEach(([k,p])=>{const b=document.createElement("button");b.type="button";b.className="qs-prod"+(k===Q.prod&&selKeys().length>1?" cur":"");b.setAttribute("role","checkbox");b.setAttribute("aria-checked",k in Q.sel);
       b.innerHTML=`<em>${p.m==="emb"?"Stitched":"Printed"}</em><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg><b>${p.name}</b>`;
@@ -1839,7 +1839,7 @@ label[for="qsDate"],#qsDate{display:none}
       pe.appendChild(wr);});
     const se=$("qsStyles");se.innerHTML="";prod().styles.forEach(s=>{const b=document.createElement("button");b.type="button";b.className="qs-style";b.setAttribute("role","radio");b.setAttribute("aria-checked",s[0]===Q.style);
       b.innerHTML=`<span><b>${tierName(s)}</b><small>${s[2]}</small></span>`;b.addEventListener("click",()=>{Q.style=s[0];saveCur();buildGear();refresh();});se.appendChild(b);});
-    $("qsMinNote").textContent=prod().m==="emb"?`Embroidered · ${prod().min} piece minimum`:"Screen print from 48 combined · DTF from 12";
+    $("qsMinNote").textContent=prod().m==="emb"?`Embroidered · ${prod().min} piece minimum`:"Print method confirmed after design review";
     const sw=$("qsSwatches");sw.innerHTML="";prod().cols.forEach(([n,c])=>{const b=document.createElement("button");b.type="button";b.className="qs-sw";b.style.background=c;b.title=n;b.setAttribute("role","radio");b.setAttribute("aria-label",n);b.setAttribute("aria-checked",c===Q.color);
       b.addEventListener("click",()=>{Q.color=c;Q.cname=n;SAMP={};saveCur();buildGear();refresh();});sw.appendChild(b);});
     $("qsColorName").textContent=Q.cname;$("qsQty").value=total();qtyUI();}
@@ -1913,7 +1913,7 @@ label[for="qsDate"],#qsDate{display:none}
     if(s.on){const g=geo(v);const mx=Math.min((A.x1-A.x0)/A.ppi,12);$("qsW").max=mx.toFixed(2);$("qsW").min=1.25;if(!fromSlider)$("qsW").value=(g.w/A.ppi).toFixed(2);$("qsWOut").textContent=(g.w/A.ppi).toFixed(1)+"″ wide · "+(g.h/A.ppi).toFixed(1)+"″ tall";}
     inkBox();}
   function inkBox(){const v=Q.view,s=Q.S[v],pr=prod(),box=$("qsInk");
-    if(isDtf()){box.innerHTML=`<div class="qs-inkhead"><p>Under 48 pieces we print with <b>DTF</b>. It's full color, so there are no ink colors to count.</p></div>`;return;}
+    if(isDtf()){box.innerHTML=`<div class="qs-inkhead"><p>For 12 to 24 pieces we print with <b>DTF</b>. It's full color, so there are no ink colors to count.</p></div>`;return;}
     const cols=s.src==="upload"&&s.up?(s.cols||[]):s.src==="text"?[s.tc]:["#F8991D"];
     const dots=`<span class="qs-dots">${cols.slice(0,8).map((c,i)=>`<i style="background:${c};animation-delay:${i*60}ms"></i>`).join("")}</span>`;
     let msg;
@@ -1976,7 +1976,7 @@ label[for="qsDate"],#qsDate{display:none}
 
   // ---------- refresh + steps ----------
   function stageBits(){const s=Q.S[Q.view];const add=$("qsAddSide");add.hidden=s.on;add.textContent=`+ Add a ${SLBL[Q.view]} ${prod().m==="emb"?"logo":"print"}`;$("qsHint").hidden=!(Q.step===2&&s.on&&!UI.hintDone);}
-  function refresh(){syncLocs();dprev();spots();gprev();{const g=grand(),el=$("qsGrand");el.className="qs-grand"+(g<12?" low":"");const z=selKeys().filter(k=>!(k===Q.prod?total():(Q.sel[k].sz["One size"]||0))).map(k=>P[k].name.toLowerCase());el.innerHTML=z.length?`Total <b>${g} pcs</b> · add a quantity for ${z.join(" and ")}`:g<12?`Total <b>${g} pcs</b> · add ${12-g} more to reach the 12 minimum`:g<48?`Total <b>${g} pcs</b> · DTF print (screen printing starts at 48)`:`Total <b>${g} pcs</b> · screen print`;document.querySelectorAll(".qs-pq").forEach(l=>l.classList.toggle("low",g<12));}inkBox();buildSwitch();const r=quote(),all=withEach(()=>({tot:quote().tot,qty:total()})),T=all.reduce((a,x)=>a+x.tot,0);
+  function refresh(){syncLocs();dprev();spots();gprev();{const g=grand(),el=$("qsGrand");el.className="qs-grand"+(g<12?" low":"");const z=selKeys().filter(k=>!(k===Q.prod?total():(Q.sel[k].sz["One size"]||0))).map(k=>P[k].name.toLowerCase());el.innerHTML=z.length?`Total <b>${g} pcs</b> · add a quantity for ${z.join(" and ")}`:g<12?`Total <b>${g} pcs</b> · add ${12-g} more to reach the 12 minimum`:g<25?`Total <b>${g} pcs</b> · DTF print (screen printing starts at 25)`:`Total <b>${g} pcs</b> · screen print`;document.querySelectorAll(".qs-pq").forEach(l=>l.classList.toggle("low",g<12));}inkBox();buildSwitch();const r=quote(),all=withEach(()=>({tot:quote().tot,qty:total()})),T=all.reduce((a,x)=>a+x.tot,0);
     countTo($("qsTot"),pp(r),money);countTo($("qsMTot"),T,money);countTo($("qsEstV"),T,money);$("qsPer").textContent=r.qty+" pcs";
     $("qsRange").textContent=pnote(r);$("qsQtyS").textContent=r.qty<prod().min?"min "+prod().min:(isRush()?"rush · contact us":"");
     $("qsMeta").textContent=`${tierName(r.st)} · ${Q.cname}`;const due=$("qsDue");due.hidden=!Q.when;due.textContent=dueD()?`Need by ${fmt(dueD())}${isRush()?" · rush":""}`:Q.when==="rush"?"Rush order":"No hard deadline";due.classList.toggle("hot",isRush());$("qsMDue").textContent=all.length>1?`Estimate · ${all.reduce((a,x)=>a+x.qty,0)} pcs`:`Estimate · ${money(pp(r))} each`;
