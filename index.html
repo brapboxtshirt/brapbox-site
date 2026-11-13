@@ -1,4 +1,5 @@
 <title>BrapBox Screen Printing</title>
+<meta charset="utf-8">
 <link rel="icon" type="image/png" href="p/logo-64.png">
 <link rel="apple-touch-icon" href="p/logo.png">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1433,6 +1434,15 @@ label[for="qsDate"],#qsDate{display:none}
   const FEAT=["1244","1089","1125","0973"];
 
   // ---------- visit request ----------
+  // ---------- lead submit ----------
+  const PREVIEW_HOST=location.protocol==="file:"||/claude|anthropic/i.test(location.hostname);
+  async function sendLead(data){
+    if(PREVIEW_HOST){console.info("[BrapBox] preview host, lead not sent",data);return {ok:true,preview:true};}
+    try{const res=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+      let j={};try{j=await res.json();}catch(_){}
+      return res.ok&&j.ok?{ok:true}:{ok:false,error:j.error||("HTTP "+res.status)};}
+    catch(e){return {ok:false,error:String(e)};}}
+  const SEND_FAIL=`Sorry, that didn't go through. Please call the shop at <a href="tel:+17142749388" style="white-space:nowrap">714-274-9388</a> and we'll take care of you.`;
   (()=>{const f=$("vf");if(!f)return;const DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const V={day:null,time:null},days=[],now=new Date(),d=new Date(now);d.setHours(0,0,0,0);
     const first=new Date(d);if(now.getHours()>=14||first.getDay()%6===0)first.setDate(first.getDate()+1);while(first.getDay()%6===0)first.setDate(first.getDate()+1);
@@ -1450,13 +1460,16 @@ label[for="qsDate"],#qsDate{display:none}
         b.addEventListener("click",()=>{V.time=t;pick(box,b);$("vfTimeV").textContent=tl(t);});box.appendChild(b);});
       if(V.time&&!box.querySelector('[aria-checked="true"]')){V.time=null;$("vfTimeV").textContent="";}}
     renderT();
-    f.addEventListener("submit",e=>{e.preventDefault();if($("vfHp").value)return;const err=$("vfErr"),name=$("vfName").value.trim(),ph=$("vfPhone").value.trim();
+    f.addEventListener("submit",async e=>{e.preventDefault();const hp=$("vfHp").value;const err=$("vfErr"),name=$("vfName").value.trim(),ph=$("vfPhone").value.trim();
       if(!V.day){err.textContent="Pick a day for your visit.";return;}
       if(!V.time){err.textContent="Pick a time that works.";return;}
       if(!name){err.textContent="Add your name so Antonio knows who's coming.";$("vfName").focus();return;}
       if(ph.replace(/\D/g,"").length<10){err.textContent="Add a phone number so Antonio can text you to confirm.";$("vfPhone").focus();return;}
-      err.textContent="";f.hidden=true;const dn=$("vfDone");dn.hidden=false;
-      dn.innerHTML=`<span class="tag">Visit request</span><h3>Thanks, ${name.split(" ")[0].replace(/</g,"")}.</h3><p>You asked for <b style="white-space:nowrap">${dl(V.day)}</b> at <b style="white-space:nowrap">${tl(V.time)}</b>. Antonio will text you to confirm.</p><p style="font-size:.84rem;color:var(--muted)">This is a preview, so nothing was actually sent.</p><button type="button" class="btn" id="vfAgain">Change request</button>`;
+      err.textContent="";const sb=f.querySelector(".vf-send");sb.disabled=true;const old=sb.innerHTML;sb.textContent="Sending…";
+      const res=await sendLead({type:"visit",name,phone:ph,visit:`${dl(V.day)} at ${tl(V.time)}`,notes:$("vfNote").value.trim(),hp});
+      sb.disabled=false;sb.innerHTML=old;if(!res.ok){err.innerHTML=SEND_FAIL;return;}
+      f.hidden=true;const dn=$("vfDone");dn.hidden=false;
+      dn.innerHTML=`<span class="tag">Visit request</span><h3>Thanks, ${name.split(" ")[0].replace(/</g,"")}.</h3><p>You asked for <b style="white-space:nowrap">${dl(V.day)}</b> at <b style="white-space:nowrap">${tl(V.time)}</b>. Antonio will text you to confirm.</p><button type="button" class="btn" id="vfAgain">Change request</button>`;
       $("vfAgain").addEventListener("click",()=>{dn.hidden=true;f.hidden=false;});});
   })();
   // ---------- flat page router: one menu, top-level pages only ----------
@@ -1996,18 +2009,23 @@ label[for="qsDate"],#qsDate{display:none}
 
   Q.cm="";document.querySelectorAll("#qsCM button").forEach(b=>b.addEventListener("click",()=>{Q.cm=b.dataset.cm;document.querySelectorAll("#qsCM button").forEach(x=>x.setAttribute("aria-pressed",x===b));}));
   // ---------- send ----------
-  $("qsForm").addEventListener("submit",e=>{e.preventDefault();if($("qsHp").value)return;const name=$("qsName").value.trim(),email=$("qsEmail").value.trim(),phone=$("qsPhone").value.trim(),err=$("qsErr");
+  $("qsForm").addEventListener("submit",async e=>{e.preventDefault();const hp=$("qsHp").value;const name=$("qsName").value.trim(),email=$("qsEmail").value.trim(),phone=$("qsPhone").value.trim(),err=$("qsErr");
     if(!name){err.textContent="Add your name so Antonio knows who it's for.";$("qsName").focus();return;}
     if(!/^\S+@\S+\.\S+$/.test(email)&&phone.replace(/\D/g,"").length<10){err.textContent="Add an email or a phone number so we can send your proof.";$("qsEmail").focus();return;}
     if((Q.cm==="call"||Q.cm==="text")&&phone.replace(/\D/g,"").length<10){err.textContent=`Add your phone number so we can ${Q.cm} you.`;$("qsPhone").focus();return;}
     if(Q.cm==="email"&&!/^\S+@\S+\.\S+$/.test(email)){err.textContent="Add your email so we can send your proof.";$("qsEmail").focus();return;}
     err.textContent="";const r=quote(),d=new Date(),ref="BB-"+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.floor(100+Math.random()*900);
+    const sumTxt=[...$("qsRows").children].map(x=>x.children[0].textContent+": "+x.children[1].textContent).concat([`Total: ${grand()} pcs (${isDtf()?"DTF":"screen print"})`]).join("\n");
+    const whenTxt=dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline";
+    const sb=$("qsForm").querySelector(".qs-send"),old=sb.innerHTML;sb.disabled=true;sb.textContent="Sending…";
+    const res=await sendLead({type:"quote",name,org:$("qsOrg").value.trim(),email,phone,contact:Q.cm||"",summary:sumTxt,when:whenTxt,ship:Q.ship==="pickup"?"In person pickup":"Ship to me",notes:$("qsNotes").value.trim(),ref,hp});
+    sb.disabled=false;sb.innerHTML=old;if(!res.ok){err.innerHTML=SEND_FAIL;return;}
     stepEls.forEach(s=>s.hidden=true);$("qsNav").hidden=true;setTrack(4);const dn=$("qsDone");dn.hidden=false;
     dn.innerHTML=`<div class="qs-stamp"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><span class="tag">Quote ${ref}</span><h3>Thank you, ${name.split(" ")[0].replace(/</g,"")}!</h3><p class="qs-thanks">Thanks for choosing BrapBox. We got your quote request and we're on it.</p>
       <p class="muted">${selKeys().length>1?withEach(()=>`${total()} ${tierName(sty()).toLowerCase()} ${prod().one}s in ${Q.cname}`).join(", ")+".":`${r.qty} ${tierName(r.st).toLowerCase()} ${prod().one}${r.qty===1?"":"s"} in ${Q.cname}.`} Antonio will look it over himself.</p>
       <div class="qs-tl"><div><b>Now</b> <span>· Your quote and art are in the queue</span></div><div><b>${fmt(bizDate(1))}</b> <span>· Proof and firm price ${Q.cm==="call"?"by phone call":Q.cm==="text"?"by text":"by email"}</span></div><div><b>${dueD()?"By "+fmt(dueD()):Q.when==="rush"?"ASAP":"Around "+fmt(bizDate(12))}</b> <span>· ${Q.ship==="pickup"?"Ready to pick up on Slater Ave":"Ships to you"}</span></div></div>
       <div class="qs-contact"><b>BrapBox Screen Printing</b><a href="https://www.google.com/maps/search/?api=1&amp;query=7501+Slater+Ave+Ste+K+Huntington+Beach+CA+92647" target="_blank" rel="noopener">7501 Slater Ave, Ste K, Huntington Beach, CA 92647</a><a href="tel:+17142749388">714-274-9388</a><a href="mailto:brapboxtshirt@gmail.com">brapboxtshirt@gmail.com</a></div>
-      <p class="qs-upnote qs-artmail">Need to send artwork? Email it to <a href="mailto:brapboxtshirt@gmail.com?subject=Artwork%20for%20quote%20${ref}">brapboxtshirt@gmail.com</a> and put <b>${ref}</b> in the subject line.</p><p style="font-size:.84rem;color:var(--muted)">This is a preview, so nothing was actually sent.</p><div><button type="button" class="btn" id="qsAgain">Start another quote</button></div>`;
+      <p class="qs-upnote qs-artmail">Need to send artwork? Email it to <a href="mailto:brapboxtshirt@gmail.com?subject=Artwork%20for%20quote%20${ref}">brapboxtshirt@gmail.com</a> and put <b>${ref}</b> in the subject line.</p><div><button type="button" class="btn" id="qsAgain">Start another quote</button></div>`;
     $("qsAgain").addEventListener("click",()=>go(0,true));$("qsMNext").textContent="Sent ✓";$("qsMNext").disabled=true;
     if(!reduce){const st=$("qs").querySelector(".qs-stamp"),box=dn.getBoundingClientRect(),sr=st.getBoundingClientRect();const cols=["#F8991D","#B7E33B","#F6F6F4","#FFC21A","#2F5BD3"];
       for(let i=0;i<22;i++){const s=document.createElement("span");s.className="qs-drop-ink";const a=Math.random()*6.283,dist=80+Math.random()*160;s.style.cssText=`left:${sr.left-box.left+48}px;top:${sr.top-box.top+48}px;background:${cols[i%5]};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;width:${6+Math.random()*12}px;height:${6+Math.random()*12}px`;dn.appendChild(s);setTimeout(()=>s.remove(),1300);}}});
