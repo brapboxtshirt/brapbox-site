@@ -1854,15 +1854,15 @@ label[for="qsDate"],#qsDate{display:none}
   const SPN={front:"Front",back:"Back",lsleeve:"Left sleeve",rsleeve:"Right sleeve"};
   function spots(){const el=$("qsSpots");if(Q.step!==2)return;const act=SIDES.filter(k=>Q.S[k].on&&(!isSlv(k)||hasSlv()));const sig=act.join()+"|"+act.map(k=>{const x=Q.S[k];return [x.pre,x.file||"",x.knock,!!x.up,(x.extra||[]).join("/")].join(":")}).join("|")+"|"+Q.prod;if(el.dataset.sig===sig)return;el.dataset.sig=sig;el.innerHTML="";
     act.forEach(k=>{const x=Q.S[k],A=area(k),c=document.createElement("div");c.className="qs-art";
-      c.innerHTML=`<span class="qs-lab">${SPN[k]} artwork</span><label class="qs-drop"><span class="ico${x.up?" ok":""}" aria-hidden="true">${x.up?"✓":"↑"}</span><span><b>${x.up?x.file.replace(/</g,""):"Drop your artwork here or tap to upload"}</b><small>${x.up?"Looks good. Tap to swap it for another file.":"PNG, JPG, SVG or WEBP."}</small></span><input type="file" multiple accept="image/png,image/jpeg,image/svg+xml,image/webp,application/pdf,.ai,.eps,.psd" aria-label="Upload ${SPN[k]} artwork"></label>${(x.extra||[]).map((f,i)=>`<div class="qs-xf"><span>+ ${f.replace(/</g,"")}</span><button type="button" data-i="${i}" aria-label="Remove ${f.replace(/"/g,"")}">×</button></div>`).join("")}${x.up?`<label class="qs-link qs-addf">+ Add another file<input type="file" multiple accept="image/png,image/jpeg,image/svg+xml,image/webp,application/pdf,.ai,.eps,.psd" aria-label="Add another ${SPN[k]} file"></label>`:""}
+      c.innerHTML=`<span class="qs-lab">${SPN[k]} artwork</span><label class="qs-drop"><span class="ico${x.up?" ok":""}" aria-hidden="true">${x.up?"✓":"↑"}</span><span><b>${x.up?x.file.replace(/</g,""):"Drop your artwork here or tap to upload"}</b><small>${x.up?"Looks good. Tap to swap it for another file.":"PNG, JPG, SVG or WEBP."}</small></span><input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Upload ${SPN[k]} artwork"></label>${(x.extra||[]).map((f,i)=>`<div class="qs-xf"><span>+ ${f.replace(/</g,"")}</span><button type="button" data-i="${i}" aria-label="Remove ${f.replace(/"/g,"")}">×</button></div>`).join("")}${x.up?`<label class="qs-link qs-addf">+ Add another file<input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Add another ${SPN[k]} file"></label>`:""}
         <div class="qs-row qs-spotx">${x.up&&!x.hasA?`<label class="qs-check"><input type="checkbox" ${x.knock?"checked":""}> Remove white background</label>`:""}${k!=="front"&&Q.S.front.up&&!x.up?`<button type="button" class="qs-link">Use my front artwork here</button>`:""}</div>
         <span class="qs-lab">Where on the ${SLBL[k]}?</span><div class="qs-chips"></div>`;
-      const inp=c.querySelector(".qs-drop input[type=file]"),dz=c.querySelector(".qs-drop");const take=(fl,swap)=>{const fs=[...fl];if(!fs.length)return;x.extra=x.extra||[];let first=fs[0];if(swap||!x.up){const img=fs.find(f=>/^image\//.test(f.type));if(img){loadFile(img,k);fs.splice(fs.indexOf(img),1);}}fs.forEach(f=>x.extra.push(f.name));refresh();};inp.addEventListener("change",e=>{take(e.target.files,true);e.target.value="";});
+      const inp=c.querySelector(".qs-drop input[type=file]"),dz=c.querySelector(".qs-drop");const take=(fl,swap)=>{const fs=[...fl];if(!fs.length)return;x.extra=x.extra||[];let first=fs[0];if(swap||!x.up){const img=fs.find(f=>/^image\//.test(f.type));if(img){loadFile(img,k);fs.splice(fs.indexOf(img),1);}}x.extraF=x.extraF||[];fs.forEach(f=>{x.extra.push(f.name);x.extraF.push(f);});refresh();};inp.addEventListener("change",e=>{take(e.target.files,true);e.target.value="";});
       const af=c.querySelector(".qs-addf input");if(af)af.addEventListener("change",e=>{take(e.target.files,false);e.target.value="";});
-      c.querySelectorAll(".qs-xf button").forEach(b=>b.addEventListener("click",()=>{x.extra.splice(+b.dataset.i,1);refresh();}));
+      c.querySelectorAll(".qs-xf button").forEach(b=>b.addEventListener("click",()=>{x.extra.splice(+b.dataset.i,1);if(x.extraF)x.extraF.splice(+b.dataset.i,1);refresh();}));
       ["dragenter","dragover"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("over");}));["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("over");}));dz.addEventListener("drop",e=>take(e.dataTransfer.files,!x.up));
       const kn=c.querySelector(".qs-check input");if(kn)kn.addEventListener("change",e=>{x.knock=e.target.checked;processUp(k);refresh();});
-      const cp=c.querySelector(".qs-spotx .qs-link");if(cp)cp.addEventListener("click",()=>{const f=Q.S.front;x.raw=f.raw;x.file=f.file;x.knock=f.knock;x.src="upload";processUp(k);applyPre(k,k==="back"?"yoke":x.pre);refresh();});
+      const cp=c.querySelector(".qs-spotx .qs-link");if(cp)cp.addEventListener("click",()=>{const f=Q.S.front;x.raw=f.raw;x.file=f.file;x.mainF=f.mainF;x.knock=f.knock;x.src="upload";processUp(k);applyPre(k,k==="back"?"yoke":x.pre);refresh();});
       const ch=c.querySelector(".qs-chips");Object.entries(A.pre).forEach(([pk,pv])=>{const b=document.createElement("button");b.type="button";b.textContent=pv[0];b.setAttribute("aria-pressed",x.pre===pk);b.addEventListener("click",()=>{applyPre(k,pk);refresh();});ch.appendChild(b);});
       el.appendChild(c);});}
   function syncLocs(){const S=Q.S,hs=!!AREA[prod().kind].lsleeve;
@@ -1885,7 +1885,7 @@ label[for="qsDate"],#qsDate{display:none}
   INKS.forEach(([n,c])=>{const b=document.createElement("button");b.type="button";b.style.background=c;b.title=n;b.setAttribute("role","radio");b.setAttribute("aria-label",n);b.dataset.c=c;
     b.addEventListener("click",()=>{const s=Q.S[Q.view];s.tc=c;s.txt=textArt(s);syncDesign();refresh();});$("qsTc").appendChild(b);});
   ["qsT1","qsT2"].forEach(id=>$(id).addEventListener("input",()=>{const s=Q.S[Q.view];s.t1=$("qsT1").value;s.t2=$("qsT2").value;s.txt=textArt(s);refresh();}));
-  function loadFile(f,side){if(!f||!/^image\//.test(f.type))return;const sd=side||Q.view,rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const s=Q.S[sd];s.raw=im;s.file=f.name;s.src="upload";processUp(sd);
+  function loadFile(f,side){if(!f||!/^image\//.test(f.type))return;const sd=side||Q.view,rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const s=Q.S[sd];s.raw=im;s.file=f.name;s.mainF=f;s.src="upload";processUp(sd);
       const A=area(sd);if(s.w<A.ppi*2)applyPre(sd,s.pre);syncDesign();refresh();};im.src=rd.result;};rd.readAsDataURL(f);}
   $("qsFile").addEventListener("change",e=>{loadFile(e.target.files[0]);e.target.value="";});
   const dz=$("qsDrop");["dragenter","dragover"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("over");}));["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("over");}));
@@ -2009,6 +2009,17 @@ label[for="qsDate"],#qsDate{display:none}
 
   Q.cm="";document.querySelectorAll("#qsCM button").forEach(b=>b.addEventListener("click",()=>{Q.cm=b.dataset.cm;document.querySelectorAll("#qsCM button").forEach(x=>x.setAttribute("aria-pressed",x===b));}));
   // ---------- send ----------
+  const ART_OK=/\.(png|jpe?g|gif|webp|svg|pdf|ai|eps|psd|tiff?)$/i,ART_MAX=5,ART_MB=10;
+  const ART_MAIL=`Email your art to <a href="mailto:brapboxtshirt@gmail.com" style="white-space:nowrap">brapboxtshirt@gmail.com</a> with your quote number.`;
+  function artList(){const act=SIDES.filter(k=>Q.S[k].on&&(!isSlv(k)||hasSlv()));const seen=new Set(),out=[];
+    act.forEach(k=>{const x=Q.S[k];[x.up?x.mainF:null,...(x.extraF||[])].forEach(f=>{if(f&&!seen.has(f)){seen.add(f);out.push({k,f});}});});
+    const multi=new Set(out.map(o=>o.k)).size>1||act.length>1;
+    return out.map(o=>({f:o.f,name:(multi?SPN[o.k].toLowerCase().replace(/\s+/g,"-")+"-":"")+o.f.name}));}
+  function artCheck(l){if(l.length>ART_MAX)return `That's more than ${ART_MAX} files.`;const bad=l.find(o=>!ART_OK.test(o.f.name));if(bad)return `We can't take ${bad.f.name.replace(/</g,"")} through the form.`;
+    if(l.reduce((t,o)=>t+o.f.size,0)>ART_MB*1048576)return `Your files are over ${ART_MB} MB total.`;return "";}
+  const readB64=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(r.error);r.readAsDataURL(f);});
+  const ART_ERR={too_many_files:`That's more than ${ART_MAX} files.`,files_too_large:"That file is too big.",file_type_not_allowed:"That file type can't go through the form.",bad_file:"One of your files couldn't be read."};
+  let skipArt=false;
   $("qsForm").addEventListener("submit",async e=>{e.preventDefault();const hp=$("qsHp").value;const name=$("qsName").value.trim(),email=$("qsEmail").value.trim(),phone=$("qsPhone").value.trim(),err=$("qsErr");
     if(!name){err.textContent="Add your name so Antonio knows who it's for.";$("qsName").focus();return;}
     if(!/^\S+@\S+\.\S+$/.test(email)&&phone.replace(/\D/g,"").length<10){err.textContent="Add an email or a phone number so we can send your proof.";$("qsEmail").focus();return;}
@@ -2017,9 +2028,13 @@ label[for="qsDate"],#qsDate{display:none}
     err.textContent="";const r=quote(),d=new Date(),ref="BB-"+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.floor(100+Math.random()*900);
     const sumTxt=[...$("qsRows").children].map(x=>x.children[0].textContent+": "+x.children[1].textContent).concat([`Total: ${grand()} pcs (${isDtf()?"DTF":"screen print"})`]).join("\n");
     const whenTxt=dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline";
-    const sb=$("qsForm").querySelector(".qs-send"),old=sb.innerHTML;sb.disabled=true;sb.textContent="Sending…";
-    const res=await sendLead({type:"quote",name,org:$("qsOrg").value.trim(),email,phone,contact:Q.cm||"",summary:sumTxt,when:whenTxt,ship:Q.ship==="pickup"?"In person pickup":"Ship to me",notes:$("qsNotes").value.trim(),ref,hp});
-    sb.disabled=false;sb.innerHTML=old;if(!res.ok){err.innerHTML=SEND_FAIL;return;}
+    const sb=$("qsForm").querySelector(".qs-send"),old=sb.innerHTML;
+    const artFail=m=>{err.innerHTML=`${m} No problem: send your quote without it, then ${ART_MAIL.charAt(0).toLowerCase()+ART_MAIL.slice(1)} <button type="button" class="qs-link" id="qsNoArt">Send without the art</button>`;$("qsNoArt").addEventListener("click",()=>{skipArt=true;$("qsForm").requestSubmit();});err.scrollIntoView({block:"center",behavior:"smooth"});};
+    const al=skipArt?[]:artList(),ac=artCheck(al);if(ac){artFail(ac);return;}
+    sb.disabled=true;sb.textContent="Sending…";let files=[];
+    try{files=await Promise.all(al.map(async o=>({name:o.name,type:o.f.type||"application/octet-stream",base64:await readB64(o.f)})));}catch(_){sb.disabled=false;sb.innerHTML=old;artFail(ART_ERR.bad_file);return;}
+    const res=await sendLead({type:"quote",name,org:$("qsOrg").value.trim(),email,phone,contact:Q.cm||"",summary:sumTxt+(skipArt?"\n(Customer will email artwork)":""),when:whenTxt,ship:Q.ship==="pickup"?"In person pickup":"Ship to me",notes:$("qsNotes").value.trim(),ref,hp,files});
+    sb.disabled=false;sb.innerHTML=old;if(!res.ok){if(ART_ERR[res.error]){artFail(ART_ERR[res.error]);return;}err.innerHTML=SEND_FAIL;return;}
     stepEls.forEach(s=>s.hidden=true);$("qsNav").hidden=true;setTrack(4);const dn=$("qsDone");dn.hidden=false;
     dn.innerHTML=`<div class="qs-stamp"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><span class="tag">Quote ${ref}</span><h3>Thank you, ${name.split(" ")[0].replace(/</g,"")}!</h3><p class="qs-thanks">Thanks for choosing BrapBox. We got your quote request and we're on it.</p>
       <p class="muted">${selKeys().length>1?withEach(()=>`${total()} ${tierName(sty()).toLowerCase()} ${prod().one}s in ${Q.cname}`).join(", ")+".":`${r.qty} ${tierName(r.st).toLowerCase()} ${prod().one}${r.qty===1?"":"s"} in ${Q.cname}.`} Antonio will look it over himself.</p>
