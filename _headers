@@ -1,0 +1,15 @@
+https://brapbox-site.pages.dev/*
+  X-Robots-Tag: noindex
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/p/*
+  Cache-Control: public, max-age=604800
+
+/v/*
+  Cache-Control: public, max-age=604800
+
+/assets/*
+  Cache-Control: public, max-age=86400
