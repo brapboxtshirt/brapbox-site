@@ -5,6 +5,30 @@
 
 const MAX_FIELD = 4000;
 
+// Artwork attachments: files = [{ name, type, base64 }]
+const MAX_FILES = 5;
+const MAX_TOTAL_BYTES = 10 * 1024 * 1024; // decoded size, all files together
+const ALLOWED_EXT = ["png", "jpg", "jpeg", "gif", "webp", "svg", "pdf", "ai", "eps", "psd", "tif", "tiff"];
+
+function readFiles(list) {
+  if (!Array.isArray(list) || !list.length) return { files: [] };
+  if (list.length > MAX_FILES) return { error: "too_many_files" };
+  const files = [];
+  let total = 0;
+  for (const f of list) {
+    const name = clean(f && f.name).replace(/[\\/\r\n"]/g, "_").slice(0, 120) || "artwork";
+    const ext = (name.split(".").pop() || "").toLowerCase();
+    if (!ALLOWED_EXT.includes(ext)) return { error: "file_type_not_allowed", file: name };
+    let b64 = String((f && f.base64) || "").replace(/^data:[^,]*,/, "").replace(/\s/g, "");
+    if (!b64 || !/^[A-Za-z0-9+/]+=*$/.test(b64)) return { error: "bad_file", file: name };
+    const bytes = Math.floor((b64.length * 3) / 4) - (b64.endsWith("==") ? 2 : b64.endsWith("=") ? 1 : 0);
+    total += bytes;
+    if (total > MAX_TOTAL_BYTES) return { error: "files_too_large" };
+    files.push({ filename: name, content: b64 });
+  }
+  return { files };
+}
+
 function clean(v) {
   return String(v ?? "").slice(0, MAX_FIELD).trim();
 }
@@ -39,6 +63,9 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: "missing_contact" }, 400);
   }
 
+  const att = readFiles(data.files);
+  if (att.error) return json({ ok: false, error: att.error, file: att.file }, 400);
+
   if (!env.RESEND_API_KEY) return json({ ok: false, error: "not_configured" }, 500);
 
   const ref = clean(data.ref);
@@ -54,6 +81,7 @@ export async function onRequestPost({ request, env }) {
     ["Visit day / time", clean(data.visit)],
     ["Notes", clean(data.notes)],
     ["Reference", ref],
+    ["Artwork attached", att.files.map((f) => f.filename).join(", ")],
   ].filter(([, v]) => v);
 
   const subject =
@@ -82,6 +110,7 @@ export async function onRequestPost({ request, env }) {
     text,
   };
   if (/^\S+@\S+\.\S+$/.test(email)) payload.reply_to = email;
+  if (att.files.length) payload.attachments = att.files;
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
