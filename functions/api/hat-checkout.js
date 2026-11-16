@@ -61,6 +61,7 @@ export async function onRequestPost({ request, env }) {
       ask_for_shipping_address: d.ship === "ship",
       merchant_support_email: "brapboxtshirt@gmail.com",
       enable_coupon: false,
+      accepted_payment_methods: { apple_pay: true, google_pay: true, cash_app_pay: true, afterpay_clearpay: true },
     },
     pre_populated_data: pre,
     payment_note: `Printed hats ${ref}`,
