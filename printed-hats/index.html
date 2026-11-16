@@ -109,6 +109,7 @@
 .hs-cap{color:#6b6b73}
 .hs-prev :focus-visible{outline-color:#16161a}
 
+.hs-addr{margin-bottom:10px}
 .hs-nobg{display:grid;gap:4px;margin-top:12px}
 .hs-nobg button{display:inline-flex;align-items:center;gap:10px;justify-self:start;padding:10px 16px 10px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:600 .95rem var(--sans);cursor:pointer}
 .hs-nobg .sw{width:36px;height:20px;border-radius:999px;background:var(--line);position:relative;transition:background .2s}
@@ -191,6 +192,7 @@
         <div class="hs-sum" id="hsSum"></div>
         <div class="hs-2"><input class="hs-in" id="hsName" placeholder="Your name" autocomplete="name" aria-label="Your name"><input class="hs-in" id="hsOrg" placeholder="Business or team (optional)" autocomplete="organization" aria-label="Business or team"></div>
         <div class="hs-2"><input class="hs-in" type="email" id="hsEmail" placeholder="Email" autocomplete="email" aria-label="Email"><input class="hs-in" type="tel" id="hsPhone" placeholder="Phone" autocomplete="tel" aria-label="Phone"></div>
+        <input class="hs-in hs-addr" id="hsAddr" placeholder="Shipping address (optional)" autocomplete="street-address" aria-label="Shipping address (optional)" maxlength="300">
         <span class="hs-lab">Preferred method of contact</span>
         <div class="hs-btns three" id="hsCM"><button type="button" data-v="call" aria-pressed="false">Call</button><button type="button" data-v="text" aria-pressed="false">Text</button><button type="button" data-v="email" aria-pressed="false">Email</button></div>
         <span class="hs-lab">Notes</span>
@@ -308,7 +310,8 @@ document.querySelectorAll("#hsCM button").forEach(b=>b.addEventListener("click",
 const press=(sel,fn)=>document.querySelectorAll(sel).forEach(b=>b.setAttribute("aria-pressed",String(fn(b))));
 function ok(s){if(s===0)return tq()>=MIN&&(H.when==="flex"||(H.when==="date"&&!!H.date));return true;}
 function whenTxt(){return H.when==="flex"?"No hard deadline":H.date?"Need by "+fmtD(H.date)+(rush()?" (rush)":""):"";}
-function sumRows(){const f=H.files.map(f=>f.name).join(", ")||"Artwork not uploaded yet";return [...items().map(x=>[x.h.name,`${x.q} × ${money(x.h.price)}`]),["Color",H.col],["Total hats",tq()+" hats"],["Estimated total",money(tot())],["Print","Front panel · "+f],...(H.nobg&&H.artNb?[["Background","Remove background"]]:[]),["Deadline",whenTxt()],["Pickup or shipping",H.ship==="pickup"?"In person pickup on Slater Ave":"Ship to me"]];}
+function sumRows(){const f=H.files.map(f=>f.name).join(", ")||"Artwork not uploaded yet";return [...items().map(x=>[x.h.name,`${x.q} × ${money(x.h.price)}`]),["Color",H.col],["Total hats",tq()+" hats"],["Estimated total",money(tot())],["Print","Front panel · "+f],...(H.nobg&&H.artNb?[["Background","Remove background"]]:[]),["Deadline",whenTxt()],["Pickup or shipping",H.ship==="pickup"?"In person pickup on Slater Ave":"Ship to me"],...(addrV()?[["Shipping address",addrV()]]:[])];}
+const addrV=()=>$("hsAddr").value.trim().replace(/\s+/g," ");$("hsAddr").addEventListener("input",()=>sync());
 function sync(){press("#hsHats .hs-opt",b=>b.dataset.v===H.hat);document.querySelectorAll("#hsHats .hs-opt").forEach(b=>b.classList.toggle("has",H.q[b.dataset.v]>0));press("#hsCols button",b=>b.dataset.v===H.col);$("hsCname").textContent=H.col;$("hsTot").hidden=!tq();$("hsTotL").textContent=`${tq()} hats`;$("hsTotV").textContent=money(tot());
   const n=$("hsQtyNote");const Q=tq();n.textContent=Q&&Q<MIN?`Add ${MIN-Q} more to reach the 24 hat minimum.`:"24 hat minimum. You can mix styles to get there.";n.classList.toggle("low",!!Q&&Q<MIN);
   press("#hsPickDate",()=>H.when==="date");press("#hsFlex",()=>H.when==="flex");$("hsDate").hidden=H.when!=="date";
