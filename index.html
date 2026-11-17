@@ -1080,7 +1080,9 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
 .qs-cal .qs-day.x{opacity:1;box-shadow:inset 0 -3px 0 var(--dim)}
 .qs-cal .qs-day.off{background:transparent;color:var(--dim);cursor:default;opacity:.5}
 .qs-cal .qs-day[aria-checked="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-label[for="qsDate"],#qsDate{display:none}
+.qs-whenw #qsDate{display:block;width:100%;max-width:none;margin-top:10px}.qs-whenw #qsDate[hidden]{display:none}
+.qs-wnote{color:var(--muted);font-size:.9rem;margin:10px 0 0}.qs-wnote.low{color:var(--brand)}
+#qsPickDate[aria-pressed="true"],#qsFlex[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 
 .qs-cal{border:0;background:transparent;padding:4px 0;width:100%;max-width:480px;margin:0 auto;justify-self:center;align-self:center}
 .qs-cal .qs-day{font-size:1.15rem}.qs-calh b{font-size:1.25rem}.qs-dow{font-size:.8rem}.qs-calnav{width:42px;height:42px}
@@ -1120,6 +1122,33 @@ label[for="qsDate"],#qsDate{display:none}
 .qs-artact{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .qs-artact .qs-rmart{color:var(--muted,#9a9aa2)}
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:22px;font-size:.88rem;color:var(--muted)}.foot-links a{text-decoration:none}.foot-links a:hover{color:var(--brand)}
+
+/* one build screen, like the hats and stickers pages (2026-11-16) */
+#qs.qs,.qs-prog,.qs-intro{max-width:none}
+.qs-hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;margin-bottom:22px}
+.qs-hero .mp-hero{margin:0;padding:0}.qs-hero .mp-lead b{color:var(--fg)}
+.qs-samp{margin:0}
+.qs-sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qs-sgrid div{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;background:#1b1b1f}
+.qs-sgrid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s}
+.qs-sgrid img.on{opacity:1}
+.qs-samp figcaption{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:10px;text-align:right}
+@media (max-width:860px){.qs-hero{grid-template-columns:1fr}.qs-samp figcaption{text-align:left}}
+@media (prefers-reduced-motion:reduce){.qs-sgrid img{transition:none}}
+
+.qs-prog{grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px;margin-left:0}
+.qs-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(24px,4vw,48px);grid-template-areas:"sw sw" "gear when" "gear design" "fin fin" "done done";align-items:start}
+.qs-body>#qsSwitch{grid-area:sw}
+.qs-body>[data-step=gear]{grid-area:gear}
+.qs-body>[data-step=when]{grid-area:when}
+.qs-body>[data-step="1"]{grid-area:design;border-top:1px solid var(--line);padding-top:26px;margin-top:30px}
+.qs-body>[data-step="4"]{grid-area:fin;max-width:760px}
+.qs-body>#qsDone{grid-area:done}
+.qs-body .qs-h h3{font-size:clamp(1.3rem,2.4vw,1.7rem)}
+#qsGPrev.qs-gprev{margin:0 0 26px}
+#qsDPrev{margin:0 0 26px}
+@media (max-width:860px){.qs-body{grid-template-columns:1fr;grid-template-areas:"sw" "gear" "when" "design" "fin" "done"}.qs-body>[data-step=when]{border-top:1px solid var(--line);padding-top:26px;margin-top:30px}}
+#qsAddr{margin-bottom:10px}
 </style>
 
 <div class="progress" id="progress"></div>
@@ -1246,7 +1275,8 @@ label[for="qsDate"],#qsDate{display:none}
 <div class="pg sub" id="quotePage" hidden aria-label="Get a quote">
 <section id="studio" style="padding-top:0">
   <div class="wrap">
-    <p class="qs-intro">Tell us what you need and we'll send you a quote. <b>About two minutes.</b></p>
+    <div class="qs-hero"><header class="mp-hero"><span class="tag">Quote</span><h2 class="mp-title">Custom<br><em>apparel.</em></h2><p class="mp-lead">Tell us what you need and we'll send you a quote. <b>About two minutes.</b></p></header>
+    <figure class="qs-samp" aria-label="Sample apparel designs"><div class="qs-sgrid" id="qsSamp"></div><figcaption>Sample ideas. Made-up logos, AI-rendered.</figcaption></figure></div>
     <ol class="qs-prog" id="qsTrack" aria-label="Quote progress"></ol>
     <div class="qs" id="qs">
       <div class="qs-stage" id="qsStage">
@@ -1261,14 +1291,14 @@ label[for="qsDate"],#qsDate{display:none}
       </div>
       <div class="qs-panel">
         <ol class="qs-steps" id="qsSteps" aria-label="Quote steps"></ol>
-        <div>
+        <div class="qs-body" id="qsBody">
           <div class="qs-gsw" id="qsSwitch" hidden><span class="qs-lab">Setting up</span><div class="qs-seg" id="qsSwitchBtns" role="group" aria-label="Garment you are setting up"></div></div>
           <div class="qs-step" data-step="when">
-            <div class="qs-h"><h3>When do you need it?</h3><p>Start with your deadline. We plan the whole job around it and tell you right away if it's a rush.</p></div>
-            <div class="qs-group"><span class="qs-lab">Need it in hand by <span class="qs-v" id="qsDateNote"></span></span><div class="qs-cal" id="qsCal" role="radiogroup" aria-label="Need-by date"></div>
-              <div class="qs-legend"><span><i class="ok"></i>Standard</span><span><i class="x"></i>Rush · contact us</span></div></div>
-            <div class="qs-row"><label class="qs-lab" for="qsDate" style="margin:0">Further out</label><input type="date" id="qsDate" style="max-width:190px"><div class="qs-locs qs-whenb"><button type="button" id="qsFlex">No hard deadline</button><button type="button" id="qsRushB">I need a rush order</button></div></div>
-            <div class="qs-dl" id="qsDl" aria-live="polite"></div>
+            <div class="qs-h"><h3>When do you need them?</h3></div>
+            <div class="qs-group qs-whenw"><span class="qs-lab">Deadline</span><div class="qs-locs" role="group" aria-label="Deadline"><button type="button" id="qsPickDate" aria-pressed="false">Pick a date</button><button type="button" id="qsFlex" aria-pressed="false">No hard deadline</button></div>
+              <input type="date" id="qsDate" aria-label="Date you need them" hidden>
+              <p class="qs-wnote" id="qsDl" aria-live="polite"></p></div>
+            <div hidden><span id="qsDateNote"></span><div id="qsCal"></div><button type="button" id="qsRushB"></button></div>
             <div class="qs-group"><span class="qs-lab">Pickup or shipping <span class="qs-v">Required</span></span><div class="qs-locs" role="group" aria-label="Pickup or delivery" id="qsShip"><button type="button" data-ship="pickup" aria-pressed="true">In person pickup</button><button type="button" data-ship="deliver" aria-pressed="false">Ship to me</button></div></div>
           </div>
           <div class="qs-step" data-step="gear" hidden>
@@ -1307,6 +1337,7 @@ label[for="qsDate"],#qsDate{display:none}
             <form id="qsForm" class="qs-form" novalidate>
               <div class="qs-2"><input type="text" id="qsName" placeholder="Your name" autocomplete="name" aria-label="Your name"><input type="text" id="qsOrg" placeholder="Business or team (optional)" autocomplete="organization" aria-label="Business or team"></div>
               <div class="qs-2"><input type="email" id="qsEmail" placeholder="Email" autocomplete="email" aria-label="Email"><input type="tel" id="qsPhone" placeholder="Phone" autocomplete="tel" aria-label="Phone"></div>
+              <input type="text" id="qsAddr" placeholder="Shipping address (optional)" autocomplete="street-address" aria-label="Shipping address (optional)" maxlength="300">
               <textarea id="qsNotes" placeholder="Anything else? Event date, names list, special inks" aria-label="Notes"></textarea>
               <div class="qs-group qs-cm"><span class="qs-lab">Preferred method of contact</span><div class="qs-locs three" id="qsCM" role="group" aria-label="Preferred method of contact"><button type="button" data-cm="call" aria-pressed="false">Call</button><button type="button" data-cm="text" aria-pressed="false">Text</button><button type="button" data-cm="email" aria-pressed="false">Email</button></div></div>
               <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="qsHp">Company website</label><input type="text" id="qsHp" tabindex="-1" autocomplete="off"></div>
@@ -1875,9 +1906,9 @@ label[for="qsDate"],#qsDate{display:none}
   const NAMES=["Deadline","Quantity & Style","Design Upload","Finalize & Send"];
   const stepsEl=$("qsSteps");
   NAMES.forEach((n,i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i>${n}</button>`;li.firstChild.addEventListener("click",()=>go(i));stepsEl.appendChild(li);});
-  const HINTS=["When you need it","Garments and how many","Place your logo","Review and send"],trk=$("qsTrack");
-  NAMES.forEach((n,i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i><span><b>${n}</b><small>${HINTS[i]}</small></span></button>`;li.firstChild.addEventListener("click",()=>go(i,true));trk.appendChild(li);});
-  function setTrack(n){[...trk.children].forEach((li,k)=>{const b=li.firstChild;li.classList.toggle("done",k<n);li.classList.toggle("on",k===n);if(k===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<n?"✓":k+1;});trk.style.setProperty("--p",Math.min(n,3)/3);}
+  const trk=$("qsTrack");
+  [["Your order","Gear, deadline and design",2],["Finalize & Send","Review and send",3]].forEach(([n,h,st],i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i><span><b>${n}</b><small>${h}</small></span></button>`;li.firstChild.addEventListener("click",()=>go(st,true));trk.appendChild(li);});
+  function setTrack(n){n=n>=3?1:0;[...trk.children].forEach((li,k)=>{const b=li.firstChild;li.classList.toggle("done",k<n);li.classList.toggle("on",k===n);if(k===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<n?"✓":k+1;});trk.style.setProperty("--p",n);}
   Q.sel={};
   const selKeys=()=>Object.keys(Q.sel);
   const grand=()=>{const ks=selKeys();return ks.length?ks.reduce((a,k)=>a+(k===Q.prod?total():(Q.sel[k].sz["One size"]||0)),0):total();};
@@ -1916,7 +1947,7 @@ label[for="qsDate"],#qsDate{display:none}
   // design step
   const sideBtns=[...document.querySelectorAll("[data-view]")];
   sideBtns.forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
-  let gpT;function gprev(){clearTimeout(gpT);gpT=setTimeout(()=>{if(Q.step!==1)return;const el=$("qsGPrev");const sig=JSON.stringify(withEach(k=>[k,Q.style,Q.color]));if(el.dataset.sig===sig)return;el.dataset.sig=sig;const items=withEach(k=>({img:thumb("front"),cap:`${tierName(sty())} ${P[k].one} · ${Q.cname}`}));el.style.setProperty("--n",items.length);el.innerHTML=items.map(x=>`<figure><img src="${x.img}" alt="Preview, ${x.cap}"><figcaption>${x.cap}</figcaption></figure>`).join("");},120);}
+  let gpT;function gprev(){clearTimeout(gpT);gpT=setTimeout(()=>{if(Q.step===3)return;const el=$("qsGPrev");const sig=JSON.stringify(withEach(k=>[k,Q.style,Q.color]));if(el.dataset.sig===sig)return;el.dataset.sig=sig;const items=withEach(k=>({img:thumb("front"),cap:`${tierName(sty())} ${P[k].one} · ${Q.cname}`}));el.style.setProperty("--n",items.length);el.innerHTML=items.map(x=>`<figure><img src="${x.img}" alt="Preview, ${x.cap}"><figcaption>${x.cap}</figcaption></figure>`).join("");},120);}
   let dpT;function dprev(){clearTimeout(dpT);dpT=setTimeout(()=>{if(Q.step!==2)return;const v=SIDES.filter(k=>Q.S[k].on&&(!isSlv(k)||hasSlv()));const views=v.length?v:["front"];const el=$("qsDPrev");el.style.setProperty("--n",views.length);el.innerHTML=views.map(x=>`<figure><img src="${thumb(x)}" alt="Preview, ${SLBL[x]}"><figcaption>${SLBL[x]}</figcaption></figure>`).join("");},120);}
 
   const SPN={front:"Front",back:"Back",lsleeve:"Left sleeve",rsleeve:"Right sleeve"};
@@ -1989,6 +2020,12 @@ label[for="qsDate"],#qsDate{display:none}
     $("qsFull").addEventListener("change",e=>{s.full=e.target.checked;inkBox();refresh();});}
 
   // quantity (garment step)
+  $("qsAddr").addEventListener("input",()=>refresh());
+  (()=>{const g=$("qsSamp");if(!g)return;const S=[1,2,3,4,5,6].map(n=>`p/quote/samples/sample-${n}.jpg`),A=["Sample printed t-shirt","Sample printed hoodie","Sample printed long sleeve"];
+    g.innerHTML=[0,1,2].map(i=>`<div><img class="on" src="${S[i]}" alt="${A[i]}" loading="lazy"><img src="${S[i+3]}" alt="" loading="lazy"></div>`).join("");
+    g.querySelectorAll("img").forEach(im=>im.addEventListener("error",()=>{const d=im.parentNode;im.remove();const k=d.querySelector("img");if(k)k.classList.add("on");if(!g.querySelector("img"))g.closest("figure").hidden=true;}));
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;let t=0;
+    setInterval(()=>{const d=g.children[t%3];const a=d.querySelectorAll("img");if(a.length===2)a.forEach(im=>im.classList.toggle("on"));t++;},2600);})();
   $("qsQty").addEventListener("input",e=>{split(Math.max(0,Math.min(5000,Math.round(+e.target.value)||0)));saveCur();qtyUI();refresh();});
   document.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{split(Math.max(0,Math.min(5000,total()+(+b.dataset.q)*12)));saveCur();$("qsQty").value=total();qtyUI();refresh();}));
   // timing step
@@ -2008,17 +2045,11 @@ label[for="qsDate"],#qsDate{display:none}
       g.appendChild(b);}
     cal.appendChild(g);
     const mn=bizDate(1);$("qsDate").min=dayKey(mn);$("qsFlex").setAttribute("aria-pressed",Q.when==="flex");$("qsRushB").setAttribute("aria-pressed",isRush());
-    const d=dueD(),dl=$("qsDl");
-    if(!Q.when){dl.innerHTML=`<p class="muted">Tap the day you need it. Typical turnaround is 10–14 days after you approve the proof.</p>`;$("qsDateNote").textContent="";return;}
-    if(Q.when==="rush"){dl.className="qs-dl x";dl.innerHTML=`<span class="qs-badge x">Rush order</span><b>Rush noted. We'll check the schedule and get back to you fast.</b><span class="muted">Pick your date on the calendar if you have one, or call the shop at <a href="tel:+17142749388">714-274-9388</a> and we'll tell you how fast we can turn it.</span>`;$("qsDateNote").textContent="Rush";return;}
-    if(Q.when==="flex"){dl.className="qs-dl ok";dl.innerHTML=`<span class="qs-badge ok">Standard</span><b>No rush. Typically ready in 10–14 days, around ${fmt(bizDate(12))}.</b><span class="muted">Proof by ${fmt(bizDate(1))}. The clock starts once you approve it.</span>`;$("qsDateNote").textContent="";return;}
-    const st=dayStatus(d),days=(()=>{let n=0;const x=new Date();x.setHours(12,0,0,0);while(dayKey(x)<dayKey(d)){x.setDate(x.getDate()+1);if(x.getDay()%6!==0)n++;}return n;})();
-    $("qsDateNote").textContent=fmt(d);dl.className="qs-dl "+st;
-    if(st==="x")dl.innerHTML=`<span class="qs-badge x">Rush · contact us</span><b>${fmt(d)} is ${days} business day${days===1?"":"s"} out, sooner than our usual 10–14 days.</b><span class="muted">Contact us at <a href="tel:+17142749388">714-274-9388</a> to confirm a rush, or keep going and send your quote. Antonio will get back to you fast.</span>`;
-    else{const ap=bizBack(d,st==="rush"?3:10),apOk=dayKey(ap)>=dayKey(bizDate(1))?ap:bizDate(1);
-      dl.innerHTML=`<span class="qs-badge ${st}">${st==="rush"?"Rush +20%":"Standard"}</span><b>${fmt(d)} works. That's ${days} business days out.</b><span class="muted">Proof by ${fmt(bizDate(1))}. Approve it by <b style="color:var(--fg)">${fmt(apOk)}</b> to make your date.</span>`;}}
+    const d=dueD(),dl=$("qsDl"),pk=Q.when==="date"||!!Q.pick;$("qsPickDate").setAttribute("aria-pressed",pk);$("qsDate").hidden=!pk;if(Q.when==="date"&&Q.date)$("qsDate").value=Q.date;
+    dl.className="qs-wnote"+(d&&isRush()?" low":"");dl.textContent=d&&isRush()?"That's sooner than our typical 10–14 days. We'll try, or call 714-274-9388 to talk rush.":"Typical turnaround is 10–14 days after you approve your proof.";}
   $("qsRushB").addEventListener("click",()=>{Q.when="rush";Q.date="";$("qsDate").value="";buildWhen();refresh();});
-  $("qsFlex").addEventListener("click",()=>{Q.when="flex";Q.date="";$("qsDate").value="";buildWhen();refresh();});
+  $("qsPickDate").addEventListener("click",()=>{Q.pick=true;if(Q.when==="flex")Q.when="";buildWhen();refresh();const di=$("qsDate");di.focus();try{di.showPicker();}catch(_){}});
+  $("qsFlex").addEventListener("click",()=>{Q.pick=false;Q.when="flex";Q.date="";$("qsDate").value="";buildWhen();refresh();});
   $("qsDate").addEventListener("input",e=>{if(!e.target.value)return;Q.when="date";Q.date=e.target.value;buildWhen();refresh();});
   document.querySelectorAll("#qsShip button").forEach(b=>b.addEventListener("click",()=>{Q.ship=b.dataset.ship;document.querySelectorAll("#qsShip button").forEach(x=>x.setAttribute("aria-pressed",x===b));refresh();}));
 
@@ -2031,7 +2062,7 @@ label[for="qsDate"],#qsDate{display:none}
     const deco=s=>{const x=Q.S[s];if(!x.on)return null;const nm=area(s).pre[x.pre]?area(s).pre[x.pre][0]:"Custom spot";const src=x.src==="upload"&&x.up?x.file:x.src==="text"?`Text "${[x.t1,x.t2].filter(Boolean).join(" ")}"`:"Artwork not uploaded yet";const more=(x.extra||[]).length?` + ${x.extra.join(", ")}`:"";
       return `${nm} · ${selKeys().length>1?"":prod().m==="emb"?"embroidered":isDtf()?"DTF print":x.full?"full color":x.inks+" ink"+(x.inks>1?"s":"")} · ${src}${more}`.replace(" ·  · "," · ");};
     const sz=keys().filter(k=>Q.sz[k]).map(k=>`${k} ${Q.sz[k]}`).join(", ");
-    const gRows=withEach(()=>[P[Q.prod].one.replace(/^./,c=>c.toUpperCase()),`${tierName(sty())} · ${Q.cname} · ${total()} pcs`]);const rows=[...gRows,["Front",deco("front")],["Back",deco("back")],["Left sleeve",deco("lsleeve")],["Right sleeve",deco("rsleeve")],["Deadline",dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline"],["Pickup or shipping",Q.ship==="pickup"?"In person pickup on Slater Ave":"Ship to me (shipping quoted on proof)"]];
+    const gRows=withEach(()=>[P[Q.prod].one.replace(/^./,c=>c.toUpperCase()),`${tierName(sty())} · ${Q.cname} · ${total()} pcs`]);const rows=[...gRows,["Front",deco("front")],["Back",deco("back")],["Left sleeve",deco("lsleeve")],["Right sleeve",deco("rsleeve")],["Deadline",dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline"],["Pickup or shipping",Q.ship==="pickup"?"In person pickup on Slater Ave":"Ship to me (shipping quoted on proof)"],["Shipping address",$("qsAddr").value.trim().replace(/\s+/g," ")]];
     if(r.rush)rows.push(["Rush","Contact us to confirm your date"]);
     $("qsRows").innerHTML=rows.filter(x=>x[1]).map(x=>`<div><span>${x[0]}</span><span>${x[1]}</span></div>`).join("");
     $("qsProofDate").textContent=fmt(bizDate(1));}
@@ -2044,15 +2075,15 @@ label[for="qsDate"],#qsDate{display:none}
     $("qsMeta").textContent=`${tierName(r.st)} · ${Q.cname}`;const due=$("qsDue");due.hidden=!Q.when;due.textContent=dueD()?`Need by ${fmt(dueD())}${isRush()?" · rush":""}`:Q.when==="rush"?"Rush order":"No hard deadline";due.classList.toggle("hot",isRush());$("qsMDue").textContent=all.length>1?`Estimate · ${all.reduce((a,x)=>a+x.qty,0)} pcs`:`Estimate · ${money(pp(r))} each`;
     if(Q.step===3)summary(r);
     navState(r);stageBits();render();}
-  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=(Q.step===1&&(grand()<12||withEach(()=>total()<1).some(Boolean)))||(Q.step===0&&!Q.when);nx.disabled=bad;mn.disabled=bad;
+  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=Q.step===2&&(grand()<12||withEach(()=>total()<1).some(Boolean)||!Q.when);nx.disabled=bad;mn.disabled=bad;
     const nextLbl=Q.step>=2?"Finalize &amp; Send":`Next: ${NAMES[Q.step+1]}`;nx.innerHTML=`${nextLbl} <span class="ar">→</span>`;mn.textContent=(Q.step>=2?"Finalize & Send":nextLbl)+" →";$("qsEst").hidden=Q.step===1;document.querySelector(".qs-pricebox").hidden=Q.step===1;$("qsMTot").parentElement.style.visibility=Q.step===1?"hidden":"";}
   const stepEls=[...document.querySelectorAll(".qs-step")];
-  function go(i,scroll){Q.step=Math.max(0,Math.min(3,i));$("qsDone").hidden=true;$("qsNav").hidden=false;
-    stepEls.forEach((s,k)=>s.hidden=k!==Q.step);[...stepsEl.children].forEach((li,k)=>{const b=li.firstChild;b.classList.toggle("done",k<Q.step);if(k===Q.step)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<Q.step?"✓":k+1;});setTrack(Q.step);
-    $("qsBack").style.visibility=Q.step===0?"hidden":"visible";$("qsNext").hidden=Q.step===3;
+  function go(i,scroll){Q.step=Math.max(2,Math.min(3,i));$("qsDone").hidden=true;$("qsNav").hidden=false;
+    stepEls.forEach((s,k)=>s.hidden=Q.step===3?k!==3:k===3);$("qsDPrev").hidden=Q.step===3;[...stepsEl.children].forEach((li,k)=>{const b=li.firstChild;b.classList.toggle("done",k<Q.step);if(k===Q.step)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<Q.step?"✓":k+1;});setTrack(Q.step);
+    $("qsBack").style.visibility=Q.step<3?"hidden":"visible";$("qsNext").hidden=Q.step===3;
     $("qs").classList.toggle("qs-design",Q.step===2);cv.style.transform="";
     if(Q.step===2){if(!Q.S[Q.view].on&&Q.S.front.on&&Q.view==="back")setView("front",true);syncDesign();}
-    if(Q.step===0)buildWhen();
+    if(Q.step===2)buildWhen();
     refresh();
     if(scroll){const top=$("qs").getBoundingClientRect().top+scrollY-(innerWidth<=980?70:90);if(innerWidth<=980)window.scrollTo({top:top+$("qsStage").offsetHeight-10,behavior:reduce?"auto":"smooth"});else if($("qs").getBoundingClientRect().top<0)window.scrollTo({top,behavior:reduce?"auto":"smooth"});}}
   $("qsNext").addEventListener("click",()=>go(Q.step+1,true));$("qsBack").addEventListener("click",()=>go(Q.step-1,true));
@@ -2119,6 +2150,7 @@ label[for="qsDate"],#qsDate{display:none}
   // mobile bar + ribbon
   const mb=$("qsMBar");new IntersectionObserver(es=>es.forEach(e=>{mb.classList.toggle("show",e.isIntersecting);document.body.classList.toggle("qs-in",e.isIntersecting);}),{threshold:.08}).observe($("qs"));
 
+  {const dp=$("qsDPrev");$("qsBody").before(dp);$("qsGPrev").hidden=true;}
   setProd("tee",true);Q.style="g5000";Q.color="#17171A";Q.cname="Black";split(48);saveCur();buildGear();go(0);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{SAMP={};SIDES.forEach(sd=>{const s=Q.S[sd];if(s.src==="text")s.txt=textArt(s);});render();});
   })();
