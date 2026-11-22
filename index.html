@@ -1080,7 +1080,7 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
 .qs-cal .qs-day.x{opacity:1;box-shadow:inset 0 -3px 0 var(--dim)}
 .qs-cal .qs-day.off{background:transparent;color:var(--dim);cursor:default;opacity:.5}
 .qs-cal .qs-day[aria-checked="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.qs-whenw #qsDate{display:block;width:100%;max-width:none;margin-top:10px}.qs-whenw #qsDate[hidden]{display:none}
+.qs-whenw #qsDate{display:none}.qs-whenw .qs-cal{margin-top:14px}.qs-whenw .qs-cal[hidden]{display:none}.qs-whenw #qsDate[hidden]{display:none}
 .qs-wnote{color:var(--muted);font-size:.9rem;margin:10px 0 0}.qs-wnote.low{color:var(--brand)}
 #qsPickDate[aria-pressed="true"],#qsFlex[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 
@@ -1147,6 +1147,29 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
 .qs-body .qs-h h3{font-size:clamp(1.3rem,2.4vw,1.7rem)}
 #qsGPrev.qs-gprev{margin:0 0 26px}
 #qsDPrev{margin:0 0 26px}
+/* one step at a time (2026-11-22) */
+.qs-prog{grid-template-columns:repeat(4,minmax(0,1fr));max-width:820px;margin-inline:auto}
+.qs-prog::before,.qs-prog::after{left:calc(22px + (100% - 44px) * .125);width:calc((100% - 44px) * .75)}
+.qs-prog::after{width:calc((100% - 44px) * .75 * var(--p))}
+@media (max-width:760px){.qs-prog::before,.qs-prog::after{left:calc(6px + (100% - 12px) * .125);width:calc((100% - 12px) * .75)}.qs-prog::after{width:calc((100% - 12px) * .75 * var(--p))}}
+.qs-body{grid-template-columns:minmax(0,1fr);grid-template-areas:"sw" "when" "gear" "design" "fin" "done";max-width:760px}
+.qs-body>[data-step="1"]{border-top:0;padding-top:0;margin-top:0}
+.qs-body:not(.qs-sub1)>#qsSwitch{display:none!important}
+#qsDPrev,#qsGPrev,#qsThumbs{display:none!important}
+#qs.qs{max-width:820px}
+
+.qs-colrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.qs-colrow>div{display:grid;gap:6px;min-width:0}.qs-colrow .qs-dots{margin:0}
+.qs-colrow .qs-step-n{flex:none}.qs-fullb{font-size:.9rem;white-space:nowrap}
+.qs-artimg{margin:0 0 10px;border-radius:12px;border:1px solid var(--line);background:repeating-conic-gradient(#3a3a3e 0 25%,#46464b 0 50%) 0 0/16px 16px;display:flex;align-items:center;justify-content:center;padding:14px;height:150px;box-sizing:border-box;overflow:hidden}
+.qs-artimg img{max-width:100%;max-height:120px;width:auto;height:auto;object-fit:contain;display:block}
+.qs-colrow{flex-wrap:wrap}
+.qs-place{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;justify-content:center;background:var(--bg)}
+.qs-place svg{width:100%;max-width:200px;height:auto;display:block}
+.qs-place path{fill:#ececee;stroke:#77757d;stroke-width:6;stroke-linejoin:round;stroke-linecap:round}
+
+.qs-colnote{margin:6px 0 0;font-size:.8rem;color:var(--muted)}
+
 @media (max-width:860px){.qs-body{grid-template-columns:1fr;grid-template-areas:"sw" "gear" "when" "design" "fin" "done"}.qs-body>[data-step=when]{border-top:1px solid var(--line);padding-top:26px;margin-top:30px}}
 #qsAddr{margin-bottom:10px}
 </style>
@@ -1296,9 +1319,9 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
           <div class="qs-step" data-step="when">
             <div class="qs-h"><h3>When do you need them?</h3></div>
             <div class="qs-group qs-whenw"><span class="qs-lab">Deadline</span><div class="qs-locs" role="group" aria-label="Deadline"><button type="button" id="qsPickDate" aria-pressed="false">Pick a date</button><button type="button" id="qsFlex" aria-pressed="false">No hard deadline</button></div>
-              <input type="date" id="qsDate" aria-label="Date you need them" hidden>
+              <div class="qs-cal" id="qsCal" role="radiogroup" aria-label="Need-by date" hidden></div><input type="date" id="qsDate" aria-label="Date you need them" hidden>
               <p class="qs-wnote" id="qsDl" aria-live="polite"></p></div>
-            <div hidden><span id="qsDateNote"></span><div id="qsCal"></div><button type="button" id="qsRushB"></button></div>
+            <div hidden><span id="qsDateNote"></span><button type="button" id="qsRushB"></button></div>
             <div class="qs-group"><span class="qs-lab">Pickup or shipping <span class="qs-v">Required</span></span><div class="qs-locs" role="group" aria-label="Pickup or delivery" id="qsShip"><button type="button" data-ship="pickup" aria-pressed="true">In person pickup</button><button type="button" data-ship="deliver" aria-pressed="false">Ship to me</button></div></div>
           </div>
           <div class="qs-step" data-step="gear" hidden>
@@ -1641,7 +1664,7 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
   const tierName=st=>{const L=Object.values(P).find(p=>p.styles.includes(st)).styles;return (TIERS[L.length]||[])[L.indexOf(st)]||st[1];};
   const SIZES=["S","M","L","XL","2XL","3XL","4XL"],UPS={"2XL":2,"3XL":3,"4XL":4};
   const SPLIT={S:.08,M:.27,L:.31,XL:.2,"2XL":.09,"3XL":.03,"4XL":.02};
-  const shirtArea={front:{x0:290,x1:710,y0:180,y1:770,ppi:30,pre:{center:["Center chest",500,215,10],left:["Left chest",612,250,3.75],full:["Full front",500,200,12]}},
+  const shirtArea={front:{x0:290,x1:710,y0:180,y1:770,ppi:30,pre:{center:["Center chest",500,215,10],left:["Left chest",612,250,3.75]}},
                    back:{x0:290,x1:710,y0:140,y1:820,ppi:30,pre:{full:["Full back",500,200,12],yoke:["Upper back",500,150,10],tag:["Below collar",500,135,3]}}};
   const SLS={x0:330,x1:670,y0:250,y1:720,ppi:90,pre:{sleeve:["Sleeve",500,320,3],small:["Small hit",500,330,1.75]}};
   const SLL={x0:380,x1:620,y0:130,y1:930,ppi:70,pre:{upper:["Upper sleeve",500,170,3],down:["Down the sleeve",500,170,2.75],cuff:["Above the cuff",500,760,2.5]}};
@@ -1698,7 +1721,7 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
     for(let y=y0;y<=y1;y+=st)for(let xx=x0;xx<=x1;xx+=st){const i=(y*w+xx)*4;if(a[i+3]<160)continue;tot++;const k=((a[i]>>4)<<8)|((a[i+1]>>4)<<4)|(a[i+2]>>4);cnt.set(k,(cnt.get(k)||0)+1);}
     const cl=[];[...cnt].sort((p,q)=>q[1]-p[1]).forEach(([k,n])=>{const r=((k>>8)&15)*17,g=((k>>4)&15)*17,b=(k&15)*17;const m=cl.find(c=>Math.hypot(c.r-r,c.g-g,c.b-b)<72);if(m)m.n+=n;else cl.push({r,g,b,n});});
     const sig=cl.filter(c=>c.n/Math.max(1,tot)>=.015);
-    s.cols=sig.slice(0,10).map(c=>"#"+[c.r,c.g,c.b].map(v=>v.toString(16).padStart(2,"0")).join(""));s.det=sig.length;s.full=sig.length>6;s.inks=Math.max(1,Math.min(6,sig.length));}
+    s.cols=sig.slice(0,10).map(c=>"#"+[c.r,c.g,c.b].map(v=>v.toString(16).padStart(2,"0")).join(""));s.det=sig.length;s.full=sig.length>6;s.inks=Math.max(1,Math.min(6,sig.length));s.cset=0;}
 
   // ---------- geometry ----------
   const area=sd=>AREA[prod().kind][sd];
@@ -1907,8 +1930,8 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
   const stepsEl=$("qsSteps");
   NAMES.forEach((n,i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i>${n}</button>`;li.firstChild.addEventListener("click",()=>go(i));stepsEl.appendChild(li);});
   const trk=$("qsTrack");
-  [["Your order","Gear, deadline and design",2],["Finalize & Send","Review and send",3]].forEach(([n,h,st],i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i><span><b>${n}</b><small>${h}</small></span></button>`;li.firstChild.addEventListener("click",()=>go(st,true));trk.appendChild(li);});
-  function setTrack(n){n=n>=3?1:0;[...trk.children].forEach((li,k)=>{const b=li.firstChild;li.classList.toggle("done",k<n);li.classList.toggle("on",k===n);if(k===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<n?"✓":k+1;});trk.style.setProperty("--p",n);}
+  [["When","Your deadline",0],["Gear","Quantity & style",1],["Artwork","Upload your design",2],["Send","Review and send",3]].forEach(([n,h,st],i)=>{const li=document.createElement("li");li.innerHTML=`<button type="button"><i>${i+1}</i><span><b>${n}</b><small>${h}</small></span></button>`;li.firstChild.addEventListener("click",()=>{if(st<=pos())go(st,true);});trk.appendChild(li);});
+  function setTrack(n){[...trk.children].forEach((li,k)=>{const b=li.firstChild;li.classList.toggle("done",k<n);li.classList.toggle("on",k===n);if(k===n)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<n?"✓":k+1;});trk.style.setProperty("--p",Math.min(n,3)/3);}
   Q.sel={};
   const selKeys=()=>Object.keys(Q.sel);
   const grand=()=>{const ks=selKeys();return ks.length?ks.reduce((a,k)=>a+(k===Q.prod?total():(Q.sel[k].sz["One size"]||0)),0):total();};
@@ -1952,18 +1975,33 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
 
   const SPN={front:"Front",back:"Back",lsleeve:"Left sleeve",rsleeve:"Right sleeve"};
   function normOn(){const S=Q.S,av=SIDES.filter(k=>!isSlv(k)||hasSlv());av.forEach(k=>{S[k].on=!!S[k].has;});if(!av.some(k=>S[k].has))S.front.on=true;syncLocs();syncDesign();}
-  function spots(){const el=$("qsSpots");if(Q.step!==2)return;const act=SIDES.filter(k=>!isSlv(k)||hasSlv());const sig=act.join()+"|"+act.map(k=>{const x=Q.S[k];return [x.pre,x.file||"",x.knock,!!x.up,!!x.has,x.on,(x.extra||[]).join("/")].join(":")}).join("|")+"|"+Q.prod;if(el.dataset.sig===sig)return;el.dataset.sig=sig;el.innerHTML="";
+  function placeSvg(k){const x=Q.S[k];if(!x.up)return "";const kind=prod().kind;let g;try{g=geo(k);}catch(_){return "";}
+    const neck=k==="back"?"Q500 145 620 110":"Q500 200 620 110",longS=kind==="ls"||kind==="crew"||kind==="hood";
+    const body=longS?`M380 110 ${neck} L770 150 L975 880 L885 912 L765 470 L765 1010 L235 1010 L235 470 L115 912 L25 880 L230 150 Z`:`M380 110 ${neck} L765 145 L945 335 L840 430 L765 370 L765 1010 L235 1010 L235 370 L160 430 L55 335 L235 145 Z`;
+    let path;
+    if(isSlv(k))path=longS?`M360 100 L640 100 L612 960 L388 960 Z M392 900 L608 900`:`M290 220 L710 220 L750 760 L250 760 Z M262 700 L738 700`;
+    else if(kind==="hat")path=k==="back"?`M240 640 Q240 290 500 290 Q760 290 760 640 Z M455 560 L545 560 L545 640 L455 640 Z`:`M240 640 Q240 290 500 290 Q760 290 760 640 Z M180 640 Q500 760 820 640`;
+    else if(kind==="tote")path=`M260 420 L740 420 L740 990 L260 990 Z M360 420 Q360 220 500 220 Q640 220 640 420`;
+    else path=body+(kind==="hood"?(k==="back"?` M380 110 C360 30 640 30 620 110`:` M380 110 C360 10 640 10 620 110 M340 760 L660 760 L700 960 L300 960 Z`):"");
+    return `<div class="qs-place" aria-hidden="true"><svg viewBox="0 0 1000 1080"><path d="${path}"/><image href="${x.up.toDataURL()}" x="${g.x.toFixed(0)}" y="${g.top.toFixed(0)}" width="${g.w.toFixed(0)}" height="${g.h.toFixed(0)}" preserveAspectRatio="xMidYMid meet"/></svg></div>`;}
+  function colRow(x){if(!x.up)return "";const n=x.det||1,cols=x.cols||[];
+    const dots=cols.length?`<span class="qs-dots">${cols.slice(0,8).map(c=>`<i style="background:${c}"></i>`).join("")}</span>`:"";
+    return `<div class="qs-colrow"><span class="qs-lab" style="margin:0">${n>6?"7+ colors detected":n+" color"+(n===1?"":"s")+" detected"}</span>${dots}</div>`;}
+  function spots(){const el=$("qsSpots");if(Q.step!==2)return;const act=SIDES.filter(k=>!isSlv(k)||hasSlv());const sig=act.join()+"|"+act.map(k=>{const x=Q.S[k];return [x.pre,x.file||"",x.knock,!!x.up,!!x.has,x.on,(x.extra||[]).join("/"),x.inks,x.full,x.det].join(":")}).join("|")+"|"+Q.prod;if(el.dataset.sig===sig)return;el.dataset.sig=sig;el.innerHTML="";
     act.forEach(k=>{const x=Q.S[k],A=area(k),c=document.createElement("div");c.className="qs-art";
       const xs=x.extra||[],sk=x.has&&!x.up&&xs.length?1:0,ttl=x.up?x.file:sk?xs[0]:"";c.classList.toggle("on",!!x.has);
-      c.innerHTML=`<span class="qs-lab">${SPN[k]}</span><label class="qs-drop"><span class="ico${x.has?" ok":""}" aria-hidden="true">${x.has?"✓":"↑"}</span><span><b>${x.has?ttl.replace(/</g,""):"Tap to upload "+SPN[k].toLowerCase()+" artwork"}</b><small>${x.has?"Looks good. Tap to swap it for another file.":"Leave empty if there's no print here."}</small></span><input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Upload ${SPN[k]} artwork"></label>${xs.map((f,i)=>i<sk?"":`<div class="qs-xf"><span>+ ${f.replace(/</g,"")}</span><button type="button" data-i="${i}" aria-label="Remove ${f.replace(/"/g,"")}">×</button></div>`).join("")}${x.has?`<div class="qs-row qs-artact"><label class="qs-link qs-addf">+ Add another file<input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Add another ${SPN[k]} file"></label><button type="button" class="qs-link qs-rmart">Remove</button></div>`:""}
+      c.innerHTML=`<span class="qs-lab">${SPN[k]}</span>${x.up&&x.up.toDataURL?`<div class="qs-artimg"><img src="${x.up.toDataURL()}" alt="Your ${SPN[k].toLowerCase()} artwork"></div>`:""}<label class="qs-drop"><span class="ico${x.has?" ok":""}" aria-hidden="true">${x.has?"✓":"↑"}</span><span><b>${x.has?ttl.replace(/</g,""):"Tap to upload "+SPN[k].toLowerCase()+" artwork"}</b><small>${x.has?"Looks good. Tap to swap it for another file.":"Leave empty if there's no print here."}</small></span><input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Upload ${SPN[k]} artwork"></label>${xs.map((f,i)=>i<sk?"":`<div class="qs-xf"><span>+ ${f.replace(/</g,"")}</span><button type="button" data-i="${i}" aria-label="Remove ${f.replace(/"/g,"")}">×</button></div>`).join("")}${x.has?`<div class="qs-row qs-artact"><label class="qs-link qs-addf">+ Add another file<input type="file" multiple accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp,image/tiff,application/pdf,.ai,.eps,.psd,.tif,.tiff" aria-label="Add another ${SPN[k]} file"></label><button type="button" class="qs-link qs-rmart">Remove</button></div>`:""}
         <div class="qs-row qs-spotx">${x.up&&!x.hasA?`<label class="qs-check"><input type="checkbox" ${x.knock?"checked":""}> Remove white background</label>`:""}${k!=="front"&&Q.S.front.up&&!x.has?`<button type="button" class="qs-link qs-usefront">Use my front artwork here</button>`:""}</div>
-        ${x.has?`<span class="qs-lab">Where on the ${SLBL[k]}?</span><div class="qs-chips"></div>`:""}`;
+        
+        ${x.has?`<span class="qs-lab">Where on the ${SLBL[k]}?</span><div class="qs-chips"></div>${placeSvg(k)}`:""}`;
       const inp=c.querySelector(".qs-drop input[type=file]"),dz=c.querySelector(".qs-drop");const take=(fl,swap)=>{const fs=[...fl];if(!fs.length)return;x.extra=x.extra||[];x.has=true;if(swap||!x.up){const img=fs.find(f=>/^image\//.test(f.type));if(img){loadFile(img,k);fs.splice(fs.indexOf(img),1);}}x.extraF=x.extraF||[];fs.forEach(f=>{x.extra.push(f.name);x.extraF.push(f);});normOn();refresh();};inp.addEventListener("change",e=>{take(e.target.files,true);e.target.value="";});
       const af=c.querySelector(".qs-addf input");if(af)af.addEventListener("change",e=>{take(e.target.files,false);e.target.value="";});
       c.querySelectorAll(".qs-xf button").forEach(b=>b.addEventListener("click",()=>{x.extra.splice(+b.dataset.i,1);if(x.extraF)x.extraF.splice(+b.dataset.i,1);x.has=!!(x.up||x.extra.length);normOn();refresh();}));
-      const rm=c.querySelector(".qs-rmart");if(rm)rm.addEventListener("click",()=>{Object.assign(x,{has:false,up:null,raw:null,file:"",mainF:null,extra:[],extraF:[],src:"sample",cols:null,inks:1});normOn();refresh();});
+      const rm=c.querySelector(".qs-rmart");if(rm)rm.addEventListener("click",()=>{Object.assign(x,{has:false,up:null,raw:null,file:"",mainF:null,extra:[],extraF:[],src:"sample",cols:null,inks:1,full:false,det:0,cset:0});normOn();refresh();});
       ["dragenter","dragover"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("over");}));["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("over");}));dz.addEventListener("drop",e=>take(e.dataTransfer.files,!x.up));
-      const kn=c.querySelector(".qs-check input");if(kn)kn.addEventListener("change",e=>{x.knock=e.target.checked;processUp(k);refresh();});
+      const kn=c.querySelector(".qs-spotx .qs-check input");if(kn)kn.addEventListener("change",e=>{x.knock=e.target.checked;processUp(k);refresh();});
+      c.querySelectorAll(".qs-colrow [data-d]").forEach(b=>b.addEventListener("click",()=>{x.inks=Math.max(1,Math.min(6,(x.inks||1)+(+b.dataset.d)));x.cset=1;refresh();}));
+      const fc=c.querySelector(".qs-fullc input");if(fc)fc.addEventListener("change",e=>{x.full=e.target.checked;x.cset=1;refresh();});
       const cp=c.querySelector(".qs-usefront");if(cp)cp.addEventListener("click",()=>{const f=Q.S.front;x.has=true;x.raw=f.raw;x.file=f.file;x.mainF=f.mainF;x.knock=f.knock;x.src="upload";processUp(k);normOn();applyPre(k,k==="back"?"yoke":x.pre);refresh();});
       const ch=c.querySelector(".qs-chips");if(ch)Object.entries(A.pre).forEach(([pk,pv])=>{const b=document.createElement("button");b.type="button";b.textContent=pv[0];b.setAttribute("aria-pressed",x.pre===pk);b.addEventListener("click",()=>{applyPre(k,pk);refresh();});ch.appendChild(b);});
       el.appendChild(c);});}
@@ -2045,11 +2083,11 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
       g.appendChild(b);}
     cal.appendChild(g);
     const mn=bizDate(1);$("qsDate").min=dayKey(mn);$("qsFlex").setAttribute("aria-pressed",Q.when==="flex");$("qsRushB").setAttribute("aria-pressed",isRush());
-    const d=dueD(),dl=$("qsDl"),pk=Q.when==="date"||!!Q.pick;$("qsPickDate").setAttribute("aria-pressed",pk);$("qsDate").hidden=!pk;if(Q.when==="date"&&Q.date)$("qsDate").value=Q.date;
+    const d=dueD(),dl=$("qsDl"),pk=Q.when==="date"||!!Q.pick;$("qsPickDate").setAttribute("aria-pressed",pk);$("qsDate").hidden=true;$("qsCal").hidden=!pk;if(Q.when==="date"&&Q.date)$("qsDate").value=Q.date;
     dl.className="qs-wnote"+(d&&isRush()?" low":"");dl.textContent=d&&isRush()?"That's sooner than our typical 10–14 days. We'll try, or call 714-274-9388 to talk rush.":"Typical turnaround is 10–14 days after you approve your proof.";}
   $("qsRushB").addEventListener("click",()=>{Q.when="rush";Q.date="";$("qsDate").value="";buildWhen();refresh();});
-  $("qsPickDate").addEventListener("click",()=>{Q.pick=true;if(Q.when==="flex")Q.when="";buildWhen();refresh();const di=$("qsDate");di.focus();try{di.showPicker();}catch(_){}});
-  $("qsFlex").addEventListener("click",()=>{Q.pick=false;Q.when="flex";Q.date="";$("qsDate").value="";buildWhen();refresh();});
+  $("qsPickDate").addEventListener("click",()=>{Q.pick=true;if(Q.when==="flex")Q.when="";buildWhen();refresh();});
+  $("qsFlex").addEventListener("click",()=>{setTimeout(()=>{if(Q.step===2&&Q.sub===0&&Q.when==="flex")go(1,true);},350);Q.pick=false;Q.when="flex";Q.date="";$("qsDate").value="";buildWhen();refresh();});
   $("qsDate").addEventListener("input",e=>{if(!e.target.value)return;Q.when="date";Q.date=e.target.value;buildWhen();refresh();});
   document.querySelectorAll("#qsShip button").forEach(b=>b.addEventListener("click",()=>{Q.ship=b.dataset.ship;document.querySelectorAll("#qsShip button").forEach(x=>x.setAttribute("aria-pressed",x===b));refresh();}));
 
@@ -2060,7 +2098,8 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
     $("qsThumbs").innerHTML=views.map(v=>`<figure><img src="${thumb(v)}" alt="Mockup, ${SLBL[v]}"><figcaption>${SLBL[v]}</figcaption></figure>`).join("");
     const AQ=withEach(()=>({tot:quote().tot,qty:total()})),multi=AQ.length>1;$("qsSumTot").previousElementSibling.textContent=multi?"Quote estimate":"Per piece";$("qsSumTot").textContent=money(multi?AQ.reduce((a,x)=>a+x.tot,0):pp(r));$("qsSumRange").textContent=multi?`${AQ.length} garments`:pnote(r);$("qsSumPer").textContent=AQ.reduce((a,x)=>a+x.qty,0)+" pcs";
     const deco=s=>{const x=Q.S[s];if(!x.on)return null;const nm=area(s).pre[x.pre]?area(s).pre[x.pre][0]:"Custom spot";const src=x.src==="upload"&&x.up?x.file:x.src==="text"?`Text "${[x.t1,x.t2].filter(Boolean).join(" ")}"`:"Artwork not uploaded yet";const more=(x.extra||[]).length?` + ${x.extra.join(", ")}`:"";
-      return `${nm} · ${selKeys().length>1?"":prod().m==="emb"?"embroidered":isDtf()?"DTF print":x.full?"full color":x.inks+" ink"+(x.inks>1?"s":"")} · ${src}${more}`.replace(" ·  · "," · ");};
+      const colTxt="";
+      return [nm,selKeys().length>1?"":prod().m==="emb"?"embroidered":isDtf()?"DTF print":"screen print",colTxt,src+more].filter(Boolean).join(" · ");};
     const sz=keys().filter(k=>Q.sz[k]).map(k=>`${k} ${Q.sz[k]}`).join(", ");
     const gRows=withEach(()=>[P[Q.prod].one.replace(/^./,c=>c.toUpperCase()),`${tierName(sty())} · ${Q.cname} · ${total()} pcs`]);const rows=[...gRows,["Front",deco("front")],["Back",deco("back")],["Left sleeve",deco("lsleeve")],["Right sleeve",deco("rsleeve")],["Deadline",dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline"],["Pickup or shipping",Q.ship==="pickup"?"In person pickup on Slater Ave":"Ship to me (shipping quoted on proof)"],["Shipping address",$("qsAddr").value.trim().replace(/\s+/g," ")]];
     if(r.rush)rows.push(["Rush","Contact us to confirm your date"]);
@@ -2075,19 +2114,20 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
     $("qsMeta").textContent=`${tierName(r.st)} · ${Q.cname}`;const due=$("qsDue");due.hidden=!Q.when;due.textContent=dueD()?`Need by ${fmt(dueD())}${isRush()?" · rush":""}`:Q.when==="rush"?"Rush order":"No hard deadline";due.classList.toggle("hot",isRush());$("qsMDue").textContent=all.length>1?`Estimate · ${all.reduce((a,x)=>a+x.qty,0)} pcs`:`Estimate · ${money(pp(r))} each`;
     if(Q.step===3)summary(r);
     navState(r);stageBits();render();}
-  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=Q.step===2&&(grand()<12||withEach(()=>total()<1).some(Boolean)||!Q.when);nx.disabled=bad;mn.disabled=bad;
-    const nextLbl=Q.step>=2?"Finalize &amp; Send":`Next: ${NAMES[Q.step+1]}`;nx.innerHTML=`${nextLbl} <span class="ar">→</span>`;mn.textContent=(Q.step>=2?"Finalize & Send":nextLbl)+" →";$("qsEst").hidden=Q.step===1;document.querySelector(".qs-pricebox").hidden=Q.step===1;$("qsMTot").parentElement.style.visibility=Q.step===1?"hidden":"";}
+  function navState(r){const nx=$("qsNext"),mn=$("qsMNext");const bad=Q.step===2&&(Q.sub===0?!Q.when:Q.sub===1?(grand()<12||withEach(()=>total()<1).some(Boolean)):false);nx.disabled=bad;mn.disabled=bad;
+    const nextLbl=["Next: Pick your gear","Next: Upload artwork","Next: Finalize &amp; Send"][Q.sub]||"Finalize &amp; Send";nx.innerHTML=`${nextLbl} <span class="ar">→</span>`;mn.innerHTML=nextLbl+" →";$("qsEst").hidden=Q.step===1;document.querySelector(".qs-pricebox").hidden=Q.step===1;$("qsMTot").parentElement.style.visibility=Q.step===1?"hidden":"";}
   const stepEls=[...document.querySelectorAll(".qs-step")];
-  function go(i,scroll){Q.step=Math.max(2,Math.min(3,i));$("qsDone").hidden=true;$("qsNav").hidden=false;
-    stepEls.forEach((s,k)=>s.hidden=Q.step===3?k!==3:k===3);$("qsDPrev").hidden=Q.step===3;[...stepsEl.children].forEach((li,k)=>{const b=li.firstChild;b.classList.toggle("done",k<Q.step);if(k===Q.step)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<Q.step?"✓":k+1;});setTrack(Q.step);
-    $("qsBack").style.visibility=Q.step<3?"hidden":"visible";$("qsNext").hidden=Q.step===3;
+  function pos(){return Q.step===3?3:(Q.sub||0);}
+  function go(i,scroll){i=Math.max(0,Math.min(3,i));if(i>pos()+1)i=pos()+1;Q.step=i>=3?3:2;Q.sub=i>=3?3:i;$("qsDone").hidden=true;$("qsNav").hidden=false;
+    stepEls.forEach((s,k)=>s.hidden=k!==pos());$("qsDPrev").hidden=true;$("qsBody").className="qs-body qs-sub"+pos();[...stepsEl.children].forEach((li,k)=>{const b=li.firstChild;b.classList.toggle("done",k<Q.step);if(k===Q.step)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");b.querySelector("i").textContent=k<Q.step?"✓":k+1;});setTrack(pos());
+    $("qsBack").style.visibility=pos()>0?"visible":"hidden";$("qsNext").hidden=Q.step===3;
     $("qs").classList.toggle("qs-design",Q.step===2);cv.style.transform="";
     if(Q.step===2){if(!Q.S[Q.view].on&&Q.S.front.on&&Q.view==="back")setView("front",true);syncDesign();}
     if(Q.step===2)buildWhen();
     refresh();
     if(scroll){const top=$("qs").getBoundingClientRect().top+scrollY-(innerWidth<=980?70:90);if(innerWidth<=980)window.scrollTo({top:top+$("qsStage").offsetHeight-10,behavior:reduce?"auto":"smooth"});else if($("qs").getBoundingClientRect().top<0)window.scrollTo({top,behavior:reduce?"auto":"smooth"});}}
-  $("qsNext").addEventListener("click",()=>go(Q.step+1,true));$("qsBack").addEventListener("click",()=>go(Q.step-1,true));
-  $("qsMNext").addEventListener("click",()=>{if(Q.step<3)go(Q.step+1,true);else $("qsForm").requestSubmit();});
+  $("qsNext").addEventListener("click",()=>go(pos()+1,true));$("qsBack").addEventListener("click",()=>go(pos()-1,true));
+  $("qsMNext").addEventListener("click",()=>{if(Q.step<3)go(pos()+1,true);else $("qsForm").requestSubmit();});
 
   // ---------- drag on canvas ----------
   function pt(e){const r=cv.getBoundingClientRect(),sc=Math.min(r.width/1000,r.height/1080),ox=r.left+(r.width-1000*sc)/2,oy=r.top+(r.height-1080*sc)/2;return {x:(e.clientX-ox)/sc,y:(e.clientY-oy)/sc,sc};}
@@ -2128,7 +2168,7 @@ section.fq-grp{padding-block:0}.fq-list{gap:clamp(28px,4vw,44px)}
     if((Q.cm==="call"||Q.cm==="text")&&phone.replace(/\D/g,"").length<10){err.textContent=`Add your phone number so we can ${Q.cm} you.`;$("qsPhone").focus();return;}
     if(Q.cm==="email"&&!/^\S+@\S+\.\S+$/.test(email)){err.textContent="Add your email so we can send your proof.";$("qsEmail").focus();return;}
     err.textContent="";const r=quote(),d=new Date(),ref="BB-"+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+Math.floor(100+Math.random()*900);
-    const sumTxt=[...$("qsRows").children].map(x=>x.children[0].textContent+": "+x.children[1].textContent).concat([`Total: ${grand()} pcs (${isDtf()?"DTF":"screen print"})`]).join("\n");
+    const sumTxt=[...$("qsRows").children].map(x=>x.children[0].textContent+": "+x.children[1].textContent).concat([`Total: ${grand()} pcs (${isDtf()?"DTF":"screen print"})`]).concat(SIDES.filter(k=>Q.S[k].src==="upload"&&Q.S[k].up&&(!isSlv(k)||hasSlv())).map(k=>`Colors detected, ${SLBL[k]}: ${(Q.S[k].det||1)>6?"7+":(Q.S[k].det||1)}`)).join("\n");
     const whenTxt=dueD()?"Need by "+fmt(dueD())+(isRush()?" (rush)":""):Q.when==="rush"?"Rush order, ASAP":"No hard deadline";
     const sb=$("qsForm").querySelector(".qs-send"),old=sb.innerHTML;
     const artFail=m=>{err.innerHTML=`${m} No problem: send your quote without it, then ${ART_MAIL.charAt(0).toLowerCase()+ART_MAIL.slice(1)} <button type="button" class="qs-link" id="qsNoArt">Send without the art</button>`;$("qsNoArt").addEventListener("click",()=>{skipArt=true;$("qsForm").requestSubmit();});err.scrollIntoView({block:"center",behavior:"smooth"});};
